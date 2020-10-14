@@ -1,0 +1,48 @@
+﻿<Window x:Class="BP2Projekt.WindowOrganizator"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BP2Projekt"
+        mc:Ignorable="d"
+        Title="Novi organizator" Height="250" Width="350"
+        Icon="../Resources/esportsIco.png">
+    <Grid Name="igracGrid" Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="28" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="50" />
+        </Grid.ColumnDefinitions>
+
+        <Label Content="Naziv:" Grid.Column="1" Grid.Row="1" />
+        <TextBox Name="tbNaziv" Grid.Column="3" Grid.Row="1" Height="20"/>
+
+        <Label Content="Osnovan u:" Grid.Column="1" Grid.Row="2" />
+        <TextBox Name="tbOsnovana" Grid.Column="3" Grid.Row="2" Height="20" HorizontalAlignment="Left" Width="50"/>
+
+        <Label Content="Država:" Grid.Column="1" Grid.Row="3" />
+        <TextBox Name="tbDrzava" Grid.Column="3" Grid.Row="3" Height="20" HorizontalAlignment="Left" Width="100"/>
+
+        <Button Name="btnDodaj" HorizontalAlignment="Right" Margin="3" MinWidth="80"  Grid.Column="3" Grid.Row="5" Click="btnDodaj_Click">
+            <TextBlock>Dodaj</TextBlock>
+        </Button>
+
+        <StatusBar Grid.Row="7" HorizontalAlignment="Stretch" Grid.ColumnSpan="5">
+            <StatusBarItem>
+                <TextBlock Name="lblStatus" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

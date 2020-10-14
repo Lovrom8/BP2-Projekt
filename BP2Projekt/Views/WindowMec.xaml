@@ -1,0 +1,34 @@
+﻿<Window x:Class="BP2Projekt.WindowMec"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BP2Projekt"
+        mc:Ignorable="d"
+        Title="WindowMec" Height="450" Width="800">
+    <Grid Name="igracGrid" Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+
+        </Grid.ColumnDefinitions>
+        <ItemsControl ItemsSource="{Binding MyItems}">
+            <ItemsControl.ItemTemplate>
+                <!-- the template of a single Item -->
+                <!-- note that I'm setting it here explicitely -->
+                <!-- but the ItemTemplate prop could have been bound, resourcized, etc -->
+                <DataTemplate>
+                    <Border BorderThickness="1">
+                        <!-- reads a ShoeSize from the items from MyItems -->
+                        <TextBlock Text="{Binding ShoeSize}" />
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </Grid>
+</Window>
