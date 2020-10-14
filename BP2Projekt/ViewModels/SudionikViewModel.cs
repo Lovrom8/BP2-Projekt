@@ -20,25 +20,15 @@ namespace BP2Projekt.ViewModels
         private readonly DelegateCommand _dodajSudionikaCmd;
         public ICommand DodajSudionikaCommand => _dodajSudionikaCmd;
 
-        private ObservableCollection<OrganizacijaModel> _listaOrganizacije;
-        private ObservableCollection<UlogaModel> _listaUloge;
-
-        private UlogaModel _uloga;
-        private IgraModel _igra;
-
         public ObservableCollection<OrganizacijaModel> ListaOrganizacije { get; set; }
         public ObservableCollection<UlogaModel> ListaUloge { get; set; }
+        public ObservableCollection<IgraModel> ListaIgre { get; set; }
+
+        private IgraModel _igra;
 
         public SudionikModel Sudionik { get; set; }
-        public UlogaModel Uloga
-        {
-            get => _uloga;
-            set
-            {
-                _uloga = value;
-               // Osvjezi(value.ID_Uloga);
-            }
-        }
+        public UlogaModel Uloga { get; set; }
+
         public OrganizacijaModel Organizacija { get; set; }
         public IgraModel Igra
         {
@@ -61,10 +51,50 @@ namespace BP2Projekt.ViewModels
 
             ListaOrganizacije = new ObservableCollection<OrganizacijaModel>();
             ListaUloge = new ObservableCollection<UlogaModel>();
+            ListaIgre = new ObservableCollection<IgraModel>();
 
             PopuniInfo(nick);
             PopuniOrganizacije();
+            PopuniIgre();
         }
+
+        private void PopuniIgre()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Igra", con);
+
+                con.Open();
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    reader.Read();
+                    if (!reader.HasRows)
+                        return;
+
+                    ListaIgre.Clear();
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        ListaIgre.Add(new IgraModel()
+                        {
+                            ID_Igra = Convert.ToInt32(s["ID_igra"].ToString()),
+                            Naziv = s["Naziv"].ToString(),
+                            Zanr = s["Zanr"].ToString()
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
         private void OsvjeziUloge(int ID_Igra) // Efikasno? Niti malo, ali eto
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
@@ -72,12 +102,13 @@ namespace BP2Projekt.ViewModels
                 var selectSQL = new SQLiteCommand(@"SELECT * FROM Uloge WHERE FK_igra=@ID_Igra", con);
                 selectSQL.Parameters.AddWithValue("@ID_Igra", ID_Igra);
 
+                con.Open();
+
                 try
                 {
                     var reader = selectSQL.ExecuteReader();
 
                     reader.Read();
-
                     if (!reader.HasRows)
                         return;
 
@@ -94,7 +125,7 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno citanje iz baze, greška: {ex.Message}");
                 }
 
                 con.Close();
@@ -113,7 +144,6 @@ namespace BP2Projekt.ViewModels
                     var reader = selectSQL.ExecuteReader();
 
                     reader.Read();
-
                     if (!reader.HasRows)
                         return;
 
@@ -130,7 +160,7 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno citanje iz baze, greška: {ex.Message}");
                 }
 
                 con.Close();
@@ -139,9 +169,12 @@ namespace BP2Projekt.ViewModels
 
         private void PopuniInfo(string nick)
         {
+            if (nick == string.Empty)
+                return;
+
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT * FROM Igrac WHERE Nick=@Nick UNION SELECT * FROM Trener WHERE Nick=@Nick LIMIT 1", con);
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Igrac WHERE Nick=@Nick UNION SELECT *, NULL FROM Trener WHERE Nick=@Nick LIMIT 1", con);
                 selectSQL.Parameters.AddWithValue("@Nick", nick);
 
                 con.Open();
@@ -151,7 +184,6 @@ namespace BP2Projekt.ViewModels
                     var reader = selectSQL.ExecuteReader();
 
                     reader.Read();
-
                     if (!reader.HasRows)
                         return;
 
@@ -160,11 +192,10 @@ namespace BP2Projekt.ViewModels
                         Sudionik.ID_Sudionik = Convert.ToInt32(reader["ID_igrac"].ToString());
                         Sudionik.ID_Uloga = Convert.ToInt32(reader["FK_uloga"].ToString());
                     }
-
                     else
                     {
                         Sudionik.ID_Sudionik = Convert.ToInt32(reader["ID_trener"].ToString());
-                        Sudionik.ID_Uloga = Convert.ToInt32(reader["FK_uloga"].ToString());
+                        Sudionik.ID_Uloga = -1;
                     }
 
                     Sudionik.ID_Tim = Convert.ToInt32(reader["FK_tim"].ToString());
@@ -173,12 +204,13 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno citanje iz baze, greška: {ex.Message}");
                 }
 
                 con.Close();
             }
         }
+
 
         private void DodajSudionika()
         {
@@ -186,12 +218,70 @@ namespace BP2Projekt.ViewModels
             {
                 con.Open();
 
-                var insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Igraci (ID_org, Naziv, Osnovana, Drzava) VALUES (@Id, @Naziv, @Osnovana, @Drzava)", con);
+                long timID = -1;
+                int brojTimova = 0;
 
-                /*insertSQL.Parameters.AddWithValue("@Id", Organizacija.ID_org);
-                insertSQL.Parameters.AddWithValue("@Naziv", Organizacija.Naziv);
-                insertSQL.Parameters.AddWithValue("@Osnovana", Organizacija.Osnovana);
-                insertSQL.Parameters.AddWithValue("@Drzava", Organizacija.Drzava);*/
+                var selectSQL = new SQLiteCommand(@"SELECT ID_tim, COUNT(*) FROM Tim WHERE FK_igra=@FK_igra AND FK_organizacija=@FK_org", con); // Provjeri ima li 
+                selectSQL.Parameters.AddWithValue("FK_igra", Igra.ID_Igra);
+                selectSQL.Parameters.AddWithValue("FK_org", Organizacija.ID_org);
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    reader.Read();
+                    if (!reader.HasRows)
+                        return;
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+
+                    brojTimova = Convert.ToInt32(reader["COUNT(*)"].ToString());
+
+                    if (brojTimova != 0)
+                        timID = Convert.ToInt32(reader["ID_tim"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno čitanje iz baze, greška: {ex.Message}");
+                    return;
+                }
+
+                if (brojTimova == 0) // Ako nema, ubaci novi tim i spremi zadnje iskorišten primarni ključ
+                {
+                    SQLiteTransaction transaction = con.BeginTransaction();
+
+                    var insertTimSQL = new SQLiteCommand(@"INSERT INTO Tim (Naziv, FK_organizacija, FK_igra) VALUES (@Naziv, @FK_org, @FK_igra)", con);
+                    insertTimSQL.Parameters.AddWithValue("@Naziv", Organizacija.Naziv);
+                    insertTimSQL.Parameters.AddWithValue("@FK_org", Organizacija.ID_org);
+                    insertTimSQL.Parameters.AddWithValue("@FK_igra", Igra.ID_Igra);
+
+                    try
+                    {
+                        insertTimSQL.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Neuspješno dodavanje tima u bazu, greška: {ex.Message}");
+                        return;
+                    }
+
+                    timID = con.LastInsertRowId;
+
+                    transaction.Commit();
+                }
+
+                string upit = string.Empty;
+                if (RadioModel.JeIgrac) // Ubaci igrača 
+                    upit = @"INSERT OR REPLACE INTO Igrac (ID_igrac, Nick, Drzava, FK_tim, FK_uloga) VALUES (@Id, @Nick, @Drzava, @FK_tim, @FK_uloga)";
+                else if (RadioModel.JeTrener)
+                    upit = @"INSERT OR REPLACE INTO Trener (ID_trener, Nick, Drzava, FK_tim) VALUES (@Id, @Nick, @Osnovana, @Drzava)";
+
+                var insertSQL = new SQLiteCommand(upit, con);
+
+                insertSQL.Parameters.AddWithValue("@Id", Sudionik.ID_Sudionik);
+                insertSQL.Parameters.AddWithValue("@Nick", Sudionik.Nick);
+                insertSQL.Parameters.AddWithValue("@FK_tim", timID);
+                insertSQL.Parameters.AddWithValue("@Drzava", Sudionik.Drzava);
+                insertSQL.Parameters.AddWithValue("@FK_uloga", Uloga.ID_Uloga);
 
                 try
                 {
@@ -199,13 +289,13 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno dodavanje sudionika u bazu, greška: {ex.Message}");
                 }
 
                 con.Close();
             }
 
-            MessageBox.Show("Organizacija dodana u bazu!", "Dodano!");
+            MessageBox.Show("Sudionik dodan u bazu!", "Dodano!");
         }
     }
 }

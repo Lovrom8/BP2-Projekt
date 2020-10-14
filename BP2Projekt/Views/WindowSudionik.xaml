@@ -37,10 +37,14 @@
                   ItemsSource="{Binding Path=ListaOrganizacije}" SelectedItem="{Binding Path=Organizacija}" DisplayMemberPath="Naziv"/>
 
         <Label Content="Igra:" Grid.Column="1" Grid.Row="4" />
-        <ComboBox Name="comboIgra" Grid.Column="3" Grid.Row="4" Height="20"/>
+        <ComboBox Name="comboIgra" Grid.Column="3" Grid.Row="4" Height="20" 
+                  ItemsSource="{Binding Path=ListaIgre}" SelectedItem="{Binding Path=Igra}" DisplayMemberPath="Naziv"/>
 
-        <Label Content="Uloga:" Grid.Column="1" Grid.Row="5" />
-        <ComboBox Name="comboUloga" Grid.Column="3" Grid.Row="5" Height="20"/>
+        <Label Content="Uloga:" Grid.Column="1" Grid.Row="5" 
+                Visibility="{Binding IsChecked,ElementName=radioIgrac, Converter={StaticResource b2v}}" />
+        <ComboBox Name="comboUloga" Grid.Column="3" Grid.Row="5" Height="20" 
+                  ItemsSource="{Binding Path=ListaUloge}" SelectedItem="{Binding Path=Uloga}" DisplayMemberPath="Naziv"
+                  Visibility="{Binding IsChecked,ElementName=radioIgrac, Converter={StaticResource b2v}}" />
 
         <Button Name="btnOsvjezi" Content="Dodaj" HorizontalAlignment="Right"
                 Margin="3" MinWidth="80" Grid.Column="3" Grid.Row="7" 

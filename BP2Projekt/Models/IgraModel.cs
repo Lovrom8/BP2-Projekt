@@ -6,8 +6,9 @@ namespace BP2Projekt.Models
 {
     public class IgraModel : INotifyPropertyChanged
     {
-        public int id;
-        public string zanr;
+        private int id;
+        private string zanr;
+        private string naziv;
 
         public int ID_Igra
         {
@@ -18,6 +19,19 @@ namespace BP2Projekt.Models
                     return;
 
                 id = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Naziv
+        {
+            get => naziv;
+            set
+            {
+                if (naziv == value)
+                    return;
+
+                naziv = value;
                 NotifyPropertyChanged();
             }
         }

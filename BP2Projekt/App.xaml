@@ -14,5 +14,6 @@
                 </Grid>
             </Border>
         </ControlTemplate>
+        <BooleanToVisibilityConverter x:Key="b2v" />
     </Application.Resources>
 </Application>
