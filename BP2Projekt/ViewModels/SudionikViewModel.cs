@@ -20,7 +20,7 @@ namespace BP2Projekt.ViewModels
         private readonly DelegateCommand _dodajSudionikaCmd;
         public ICommand DodajSudionikaCommand => _dodajSudionikaCmd;
 
-        public ObservableCollection<OrganizacijaModel> ListaOrganizacije { get; set; }
+        public ObservableCollection<OrganizacijaModel> ListaOrganizacije { get; set; } // PAZI: mora biti property!
         public ObservableCollection<UlogaModel> ListaUloge { get; set; }
         public ObservableCollection<IgraModel> ListaIgre { get; set; }
 
@@ -28,7 +28,6 @@ namespace BP2Projekt.ViewModels
 
         public SudionikModel Sudionik { get; set; }
         public UlogaModel Uloga { get; set; }
-
         public OrganizacijaModel Organizacija { get; set; }
         public IgraModel Igra
         {
@@ -232,7 +231,6 @@ namespace BP2Projekt.ViewModels
                     reader.Read();
                     if (!reader.HasRows)
                         return;
-                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
 
                     brojTimova = Convert.ToInt32(reader["COUNT(*)"].ToString());
 

@@ -5,30 +5,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BP2Projekt"
         mc:Ignorable="d"
-        Title="WindowMec" Height="450" Width="800">
-    <Grid Name="igracGrid" Background="LightGray">
+        Title="Meč" Height="450" Width="500"
+         Icon="../Resources/esportsIco.png">
+
+    <Grid Name="igracGrid" Background="LightGray" TextElement.FontSize="14">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
-
+            <ColumnDefinition Width="175"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="175"/>
+            <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
-        <ItemsControl ItemsSource="{Binding MyItems}">
+
+        <Label Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" Content="{Binding Path=TimA.Naziv}" />
+        <Label Grid.Column="1" Grid.Row="2" HorizontalContentAlignment="Center" Content="{Binding Path=Mec.RezultatA}" />
+        
+        <ComboBox Grid.Column="1" Grid.Row="1" Name="comboTimoviA" Height="25"
+                  ItemsSource="{Binding ListaTimovi}" SelectedItem="{Binding TimA}" DisplayMemberPath="Naziv"
+                  Visibility="{Binding Vidljivost}"/>
+        
+        <Label Content="PROTIV" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" />
+        
+        <Label Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center" Content="{Binding Path=TimB.Naziv}" />
+        <Label Grid.Column="3" Grid.Row="2" HorizontalContentAlignment="Center" Content="{Binding Path=Mec.RezultatB}" />
+        
+        <ComboBox Grid.Column="3" Grid.Row="1" Name="comboTimoviB" Height="25"
+                  ItemsSource="{Binding ListaTimovi}" SelectedItem="{Binding TimB}" DisplayMemberPath="Naziv"
+                  Visibility="{Binding Vidljivost}"/>
+        
+        <ItemsControl Grid.Column="1" Grid.Row="4"  Name="icTimA" ItemsSource="{Binding TimA.Igraci}">
             <ItemsControl.ItemTemplate>
-                <!-- the template of a single Item -->
-                <!-- note that I'm setting it here explicitely -->
-                <!-- but the ItemTemplate prop could have been bound, resourcized, etc -->
                 <DataTemplate>
                     <Border BorderThickness="1">
-                        <!-- reads a ShoeSize from the items from MyItems -->
-                        <TextBlock Text="{Binding ShoeSize}" />
+                        <TextBlock Height="30" HorizontalAlignment="Center" Text="{Binding Path=Nick}" />
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        <ItemsControl Grid.Column="3" Grid.Row="4"  Name="icTimB" ItemsSource="{Binding TimB.Igraci}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="1">
+                        <TextBlock Height="30" HorizontalAlignment="Center" Text="{Binding Nick}" />
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Button Grid.Column="1" Grid.Row="5" Name="btnPromjeniTimove" Content="Promjeni timove" VerticalContentAlignment="Top" Command="{Binding Path=PromjeniTimoveCommand}"/>
+        <Button Grid.Column="3" Grid.Row="5" Name="btnSpremiPromjene" Content="Spremi promjene" VerticalContentAlignment="Top" Command="{Binding Path=SpremiPromjeneCommand}"/>
 
     </Grid>
 </Window>

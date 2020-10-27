@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BP2Projekt.Models
 {
-    class IgracModel : INotifyPropertyChanged
+    class TimModel : INotifyPropertyChanged
     {
-        public int id;
-        public string nick;
-        public string drzava;
+        private int id;
+        private ObservableCollection<IgracModel> igraci;
+        private string naziv;
 
-        public int ID_igrac
+        public int ID_Tim
         {
             get => id;
             set
@@ -27,28 +25,29 @@ namespace BP2Projekt.Models
             }
         }
 
-        public string Nick
+        public string Naziv
         {
-            get => nick;
+            get => naziv;
             set
             {
-                if (nick == value)
+                if (naziv == value)
                     return;
 
-                nick = value;
+                naziv = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public string Drzava
+
+        public ObservableCollection<IgracModel> Igraci
         {
-            get => drzava;
+            get => igraci;
             set
             {
-                if (drzava == value)
+                if (igraci == value)
                     return;
 
-                drzava = value;
+                igraci = value;
                 NotifyPropertyChanged();
             }
         }

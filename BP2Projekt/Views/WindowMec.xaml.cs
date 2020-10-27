@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BP2Projekt.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +15,15 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    /// <summary>
-    /// Interaction logic for WindowMec.xaml
-    /// </summary>
     public partial class WindowMec : Window
     {
         public WindowMec()
         {
             InitializeComponent();
+
+            int mecID = 2;
+            var _mvm = new MecViewModel(mecID);
+            DataContext = _mvm;
         }
     }
 }

@@ -5,11 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BP2Projekt"
         mc:Ignorable="d"
-        Title="Roster" Height="450" Width="500">
+        Title="Roster" Height="450" Width="500"
+        Icon="../Resources/esportsIco.png">
     <Grid Name="igracGrid" Background="LightGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -17,16 +19,17 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
-        <ListView Grid.Row="1" Grid.Column="1">//ItemsSource="{Binding Source={StaticResource EmployeeInfoDataSource}}">
+        <ListView Grid.Row="1" Grid.Column="1"
+                  ItemsSource="{Binding ListaIgraci}" SelectedItem="{Binding OdabraniIgrac}">
 
             <ListView.View>
-                <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=FirstName}" Header="Ime" Width="100"/>
+                <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Timovi">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Nick}" Header="Ime" Width="100"/>
 
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Orgnaizacija}" Width="100">
-                        <GridViewColumnHeader>Organizacija
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Drzava}" Width="100">
+                        <GridViewColumnHeader>Drzava
                             <GridViewColumnHeader.ContextMenu>
-                                <ContextMenu Name="LastNameCM"> <!-- MenuItem.Click="LastNameCM_Click"  --> 
+                                <ContextMenu Name="DrzavaCM">
                                     <MenuItem Header="Ascending" />
                                     <MenuItem Header="Descending" />
                                 </ContextMenu>
@@ -34,12 +37,16 @@
                         </GridViewColumnHeader>
                     </GridViewColumn>
 
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Uloga}" Header="Uloga" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=UlogaNaziv}" Header="Uloga" Width="100"/>
                 </GridView>
             </ListView.View>
         </ListView>
 
-        <Button Grid.Column="1" Grid.Row="2" Width="100" Height="20" HorizontalAlignment="Left" Content="Dodaj" Command="{Binding Path=DodajIgracaCommand}"/>
-        <Button Grid.Column="1"  Grid.Row="2" Width="100" Height="20" HorizontalAlignment="Right" Content="Obirisi" Command="{Binding Path=ObrisiIgracaCommand}"/>
+        <ComboBox Grid.Column="1" Grid.Row="2" Width="125" Height="20"
+                    ItemsSource="{Binding Path=ListaUloge}" SelectedItem="{Binding Path=Uloga}" DisplayMemberPath="Naziv"
+                  Visibility="{Binding IsChecked,ElementName=radioIgrac, Converter={StaticResource b2v}}" /> 
+
+        <Button Grid.Column="1" Grid.Row="3" Width="100" Height="20" HorizontalAlignment="Left" Content="Dodaj" Command="{Binding Path=DodajIgracaCommand}"/>
+        <Button Grid.Column="1"  Grid.Row="3" Width="100" Height="20" HorizontalAlignment="Right" Content="Obirisi" Command="{Binding Path=ObrisiIgracaCommand}"/>
     </Grid>
 </Window>

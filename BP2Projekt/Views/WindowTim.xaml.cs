@@ -1,6 +1,8 @@
-﻿using System;
+﻿using BP2Projekt.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,6 +24,10 @@ namespace BP2Projekt
         public WindowRoster()
         {
             InitializeComponent();
+
+            int id = 2;
+            var _tvm = new TimViewModel(id);
+            DataContext = _tvm;
         }
     }
 }

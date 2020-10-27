@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace BP2Projekt
 {
@@ -15,6 +16,8 @@ namespace BP2Projekt
         private int ID_uloga;
         private string drzava;
         private string nick;
+        private string ulogaNaziv;
+        private bool jeOdabran;
 
         public int ID_Sudionik
         {
@@ -61,6 +64,18 @@ namespace BP2Projekt
                 if (ID_uloga == value)
                     return;
                 ID_uloga = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+        public string UlogaNaziv
+        {
+            get => ulogaNaziv;
+            set
+            {
+                if (ulogaNaziv == value)
+                    return;
+                ulogaNaziv = value;
 
                 NotifyPropertyChanged();
             }

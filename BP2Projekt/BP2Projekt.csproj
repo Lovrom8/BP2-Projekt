@@ -71,11 +71,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Baza\SQLUtil.cs" />
-    <Compile Include="Models\IgracModel.cs" />
     <Compile Include="Models\IgraModel.cs" />
+    <Compile Include="Models\MecModel.cs" />
     <Compile Include="Models\OrganizacijaModel.cs" />
     <Compile Include="Baza\SQLPostavke.cs" />
     <Compile Include="Models\SudionikModel.cs" />
+    <Compile Include="Models\TimModel.cs" />
     <Compile Include="Models\UlogaModel.cs" />
     <Compile Include="ViewModels\IgracTrenerRadioModel.cs" />
     <Compile Include="ViewModels\MecViewModel.cs" />
