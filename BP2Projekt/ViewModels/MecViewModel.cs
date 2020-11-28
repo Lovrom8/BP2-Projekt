@@ -24,10 +24,30 @@ namespace BP2Projekt.ViewModels
         private readonly DelegateCommand _spremiPromjene;
         public ICommand SpremiPromjeneCommand => _spremiPromjene;
 
+        private TimModel _timB;
+        private TimModel _timA;
+
         public MecModel Mec { get; set; }
-        public TimModel TimA { get; set; }
-        public TimModel TimB { get; set; }
-        public TimModel NoviA { get; set; }
+        public TimModel TimA
+        {
+            get => _timA;
+            set
+            {
+                _timA = value;
+                TimA.Igraci = new ObservableCollection<IgracModel>(IzvadiIgrace(value.ID_Tim));
+                OnPropertyChanged("TimA");
+            }
+        }
+        public TimModel TimB
+        {
+            get => _timB;
+            set
+            {
+                _timB = value;
+                TimB.Igraci = new ObservableCollection<IgracModel>(IzvadiIgrace(value.ID_Tim));
+                OnPropertyChanged("TimB");
+            }
+        }
 
         public ObservableCollection<TimModel> ListaTimovi { get; set; } // PAZI: mora biti property!
 
@@ -39,8 +59,6 @@ namespace BP2Projekt.ViewModels
             ListaTimovi = new ObservableCollection<TimModel>();
 
             PopuniInfo(MecID);
-            IzvadiIgrace(TimA.ID_Tim);
-            IzvadiIgrace(TimB.ID_Tim);
         }
 
         private void PopuniInfo(int MecID)
@@ -100,10 +118,7 @@ namespace BP2Projekt.ViewModels
         private Visibility _vidljivost = Visibility.Collapsed;
         public Visibility Vidljivost
         {
-            get
-            {
-                return _vidljivost;
-            }
+            get => _vidljivost;
             set
             {
                 _vidljivost = value;
@@ -111,28 +126,39 @@ namespace BP2Projekt.ViewModels
             }
         }
 
-        private List<IgracModel> IzvadiIgrace(SQLiteConnection con, int timID)
+        private ObservableCollection<IgracModel> IzvadiIgrace(int timID)
         {
-            var igraci = new List<IgracModel>();
+            var igraci = new ObservableCollection<IgracModel>();
 
-            var selectSQL = new SQLiteCommand(@"SELECT * FROM Igrac m 
-                                                        WHERE m.FK_tim=@Id ", con);
-            selectSQL.Parameters.AddWithValue("@Id", timID);
-
-            var reader = selectSQL.ExecuteReader();
-
-            reader.Read();
-            if (!reader.HasRows)
-                return igraci;
-
-            foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+            try
             {
-                igraci.Add(new IgracModel()
+                using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
                 {
-                    ID_Sudionik = Convert.ToInt32(s["ID_igrac"].ToString()),
-                    Drzava = s["Drzava"].ToString(),
-                    Nick = s["Nick"].ToString()
-                });
+                    con.Open();
+                    var selectSQL = new SQLiteCommand(@"SELECT * FROM Igrac m 
+                                                        WHERE m.FK_tim=@Id ", con);
+                    selectSQL.Parameters.AddWithValue("@Id", timID);
+
+                    var reader = selectSQL.ExecuteReader();
+
+                    reader.Read();
+                    if (!reader.HasRows)
+                        return igraci;
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        igraci.Add(new IgracModel()
+                        {
+                            ID_Sudionik = Convert.ToInt32(s["ID_igrac"].ToString()),
+                            Drzava = s["Drzava"].ToString(),
+                            Nick = s["Nick"].ToString()
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
             }
 
             return igraci;
@@ -184,24 +210,12 @@ namespace BP2Projekt.ViewModels
                 {
                     con.Open();
 
-                    var selectSQL = new SQLiteCommand(@"SELECT ID_tim, Naziv FROM Tim", con);
+                    var updateSQL = new SQLiteCommand(@"UPDATE Mec SET FK_timA = @TimAId, FK_timB = @TimBId WHERE ID_mec=@MecID", con);
+                    updateSQL.Parameters.AddWithValue("@TimAId", TimA.ID_Tim);
+                    updateSQL.Parameters.AddWithValue("@TimBId", TimB.ID_Tim);
+                    updateSQL.Parameters.AddWithValue("@MecID", Mec.ID_Mec);
 
-                    var reader = selectSQL.ExecuteReader();
-
-                    reader.Read();
-                    if (!reader.HasRows)
-                        return;
-
-                    ListaTimovi.Clear();
-
-                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
-                    {
-                        ListaTimovi.Add(new TimModel()
-                        {
-                            ID_Tim = Convert.ToInt32(s["ID_tim"].ToString()),
-                            Naziv = s["Naziv"].ToString()
-                        });
-                    }
+                    updateSQL.ExecuteNonQuery();
 
                     con.Close();
                 }

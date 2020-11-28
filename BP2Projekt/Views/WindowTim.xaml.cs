@@ -16,12 +16,9 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    /// <summary>
-    /// Interaction logic for WindowRoster.xaml
-    /// </summary>
-    public partial class WindowRoster : Window
+    public partial class WindowTim : Window
     {
-        public WindowRoster()
+        public WindowTim()
         {
             InitializeComponent();
 

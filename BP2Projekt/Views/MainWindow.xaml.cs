@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
+using BP2Projekt.ViewModels;
+using BP2Projekt.Util;
 
 namespace BP2Projekt
 {
@@ -22,11 +24,14 @@ namespace BP2Projekt
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
+            this.DataContext = new GlavniViewModel();
 
+            ProzorManager.Registriraj<WindowSudionik>("ProzorSudionici");
+            ProzorManager.Registriraj<WindowOrganizator>("ProzorOrganizator");
+            ProzorManager.Registriraj<WindowTim>("ProzorTim");
+            ProzorManager.Registriraj<WindowOrganizacija>("ProzorOrganizacija");
+            ProzorManager.Registriraj<WindowOrganizator>("ProzorOrganizator");
         }
     }
 }

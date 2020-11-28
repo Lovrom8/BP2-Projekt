@@ -3,13 +3,104 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BP2Projekt"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="BP2 Projekt" Height="450" Width="800"
-        Icon="../Resources/esportsIco.png">
-    <Grid>
-        <Button Click="Button_Click">
-            
-        </Button>
-    </Grid>
+        Icon="../Resources/esportsIco.png"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Green.Named.Primary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DialogHost.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <materialDesign:DialogHost Identifier="RootDialog" x:Name="DialogHost">
+        <materialDesign:DialogHost.DialogContent>
+            <StackPanel Width="128" VerticalAlignment="Center">
+
+                <TextBlock  Text="My first Dialog" />
+                <Button                             Width="128"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        IsCancel="True" 
+                                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                        CommandParameter="Sample2Cancel"
+                                        HorizontalAlignment="Center"
+                                        Content="CANCEL"/>
+            </StackPanel>
+        </materialDesign:DialogHost.DialogContent>
+        <DockPanel>
+            <materialDesign:PopupBox
+            Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Margin="32"
+            Grid.Row="1">
+                <StackPanel>
+                    <Button ToolTip="Dodaj sudionike" Content="{materialDesign:PackIcon Kind=Github, Size=20}" 
+                        Command="{Binding OtvoriSudionikeCommand}"/>
+
+                    <Button
+                    ToolTip="Dodaj timove"
+                    Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
+                    Content="{materialDesign:PackIcon Kind=Twitter, Size=20}"
+                    Command="{Binding OtvoriTimoveCommand}"/>
+
+                    <Button
+                    ToolTip="Chat" Command="{Binding OtvoriOrganizatoraCommand}"
+                
+                    Content="{materialDesign:PackIcon Kind=Message, Size=20}">
+                        <!-- mix up the colours by bringing in a named palette (see merged dictionaries at top) -->
+                        <Button.Background>
+                            <SolidColorBrush Color="{StaticResource GreenPrimary500}"/>
+                        </Button.Background>
+
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{StaticResource GreenPrimary500Foreground}"/>
+                        </Button.Foreground>
+                    </Button>
+
+                    <Button
+                    ToolTip="Email"
+                  
+                    Background="{DynamicResource SecondaryHueMidBrush}"
+                    Foreground="{DynamicResource SecondaryHueMidForegroundBrush}"
+                    Content="{materialDesign:PackIcon Kind=Email, Size=20}"/>
+
+                    <Button
+                    ToolTip="Feel like you want to make a donation?  It would be gratefully received.  Click the button to donate via Pledgie." 
+                   
+                    Content="{materialDesign:PackIcon Kind=Gift, Size=20}">
+                        <Button.Background>
+                            <SolidColorBrush Color="{StaticResource GreenPrimary200}"/>
+                        </Button.Background>
+
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{StaticResource GreenPrimary200Foreground}"/>
+                        </Button.Foreground>
+                    </Button>
+
+                    <Button Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}" >
+                        <!--<Button.CommandParameter>
+                            <StackPanel Margin="16">
+                                <Button IsCancel="True" Margin="8 0 0 0" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Content="Save" />
+                            </StackPanel>
+                            <system:DateTime>1966-JUL-30</system:DateTime>
+
+                        </Button.CommandParameter>--> Edit
+                    </Button>
+
+                </StackPanel>
+            </materialDesign:PopupBox>
+        </DockPanel>
+
+    </materialDesign:DialogHost>
+
+
 </Window>

@@ -98,7 +98,7 @@ namespace BP2Projekt.ViewModels
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT * FROM Uloge WHERE FK_igra=@ID_Igra", con);
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Uloga WHERE FK_igra=@ID_Igra", con);
                 selectSQL.Parameters.AddWithValue("@ID_Igra", ID_Igra);
 
                 con.Open();
@@ -284,16 +284,14 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     insertSQL.ExecuteNonQuery();
+                    MessageBox.Show("Sudionik dodan u bazu!", "Dodano!");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno dodavanje sudionika u bazu, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno dodavanje sudionika u bazu! {Environment.NewLine} Greška: {ex.Message}");
                 }
-
                 con.Close();
             }
-
-            MessageBox.Show("Sudionik dodan u bazu!", "Dodano!");
         }
     }
 }
