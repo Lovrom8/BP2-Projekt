@@ -1,4 +1,5 @@
 ﻿using BP2Projekt.ViewModels;
+using MaterialDesignExtensions.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    public partial class WindowTim : Window
+    public partial class WindowTim : MaterialWindow
     {
         public WindowTim()
         {

@@ -15,11 +15,12 @@ using System.Windows.Shapes;
 using System.Data.SqlClient;
 using BP2Projekt.ViewModels;
 using BP2Projekt.Util;
+using MaterialDesignExtensions.Controls;
 
 namespace BP2Projekt
 {
     // IKONA: https://www.flaticon.com/free-icon/sport-and-competion_3565531?term=esports&page=1&position=8
-    public partial class MainWindow : Window
+    public partial class MainWindow : MaterialWindow
     {
         public MainWindow()
         {

@@ -43,11 +43,10 @@ namespace BP2Projekt
                 {
                     var reader = selectSQL.ExecuteReader();
 
-                    reader.Read();
-
                     if (!reader.HasRows)
                         return;
 
+                    reader.Read();
                     Organizacija.ID_org = ID;
                     Organizacija.Naziv = reader["Naziv"].ToString();
                     Organizacija.Drzava = reader["Drzava"].ToString();

@@ -31,6 +31,8 @@ namespace BP2Projekt.ViewModels
             _dodajIgracaCmd = new DelegateCommand(DodajIgraca);
             _obirisiIgracaCmd = new DelegateCommand(ObrisiIgraca);
 
+            OstaliIgraci = new ObservableCollection<IgracModel>();
+
             PopuniListuIgraca(TimID);
         }
 
@@ -49,12 +51,11 @@ namespace BP2Projekt.ViewModels
                 {
                     var reader = selectSQL.ExecuteReader();
 
-                    reader.Read();
                     if (!reader.HasRows)
                         return;
 
                     ListaIgraci.Clear();
-                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+                    //var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
                     foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
                     {
                         ListaIgraci.Add(new IgracModel()
@@ -130,7 +131,7 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno osvježavanje u bazi, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno brisanje u bazi, greška: {ex.Message}");
                 }
 
                 con.Close();

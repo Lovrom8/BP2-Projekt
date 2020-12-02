@@ -1,4 +1,5 @@
 ﻿using BP2Projekt.ViewModels;
+using MaterialDesignExtensions.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    public partial class WindowMec : Window
+    public partial class WindowMec : MaterialWindow
     {
         public WindowMec()
         {

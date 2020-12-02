@@ -1,13 +1,27 @@
-﻿<Window x:Class="BP2Projekt.WindowSudionik"
+﻿<mde:MaterialWindow x:Class="BP2Projekt.WindowSudionik"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BP2Projekt" xmlns:viewmodels="clr-namespace:BP2Projekt.ViewModels"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
         mc:Ignorable="d"
         Title="Novi sudionik" Height="250" Width="350"
-        Icon="../Resources/esportsIco.png">
-   
+        Icon="../Resources/esportsIco.png"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Green.Named.Primary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DialogHost.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid Name="igracGrid" Background="LightGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -26,8 +40,8 @@
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <RadioButton Name="radioIgrac" IsChecked="{Binding Path=RadioModel.JeIgrac, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Left" Content="Igrač"/>
-        <RadioButton Name="radioTrener" IsChecked="{Binding Path=RadioModel.JeTrener, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Right" Content="Trener"/>
+        <RadioButton  Style="{StaticResource MaterialDesignRadioButton}" Name="radioIgrac" IsChecked="{Binding Path=RadioModel.JeIgrac, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Left" Content="Igrač"/>
+        <RadioButton  Style="{StaticResource MaterialDesignRadioButton}" Name="radioTrener" IsChecked="{Binding Path=RadioModel.JeTrener, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Right" Content="Trener"/>
 
         <Label Content="Nick:" Grid.Column="1" Grid.Row="2" />
         <TextBox Name="tbNick" Grid.Column="3" Grid.Row="2" Height="20" Text="{Binding Path=Sudionik.Nick}"/>
@@ -50,4 +64,4 @@
                 Margin="3" MinWidth="80" Grid.Column="3" Grid.Row="7" 
                 Command="{Binding Path=DodajSudionikaCommand}"/>
     </Grid>
-</Window>
+</mde:MaterialWindow>

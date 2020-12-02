@@ -8,10 +8,11 @@ using System.Data.SQLite;
 using BP2Projekt.Models;
 using Prism.Commands;
 using System.Windows.Input;
+using MaterialDesignExtensions.Controls;
 
 namespace BP2Projekt
 {
-    public partial class WindowOrganizacija : Window
+    public partial class WindowOrganizacija : MaterialWindow
     {
         public WindowOrganizacija()
         {

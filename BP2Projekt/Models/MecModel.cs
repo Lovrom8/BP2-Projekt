@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BP2Projekt.Models
 {
@@ -17,6 +16,12 @@ namespace BP2Projekt.Models
         private int pobjednik;
         private int rezultatA;
         private int rezultatB;
+        private int ligaID;
+
+        private string liga;
+        private string nazivA;
+        private string nazivB;
+        private string pobjednikNaziv;
 
         public int ID_Mec
         {
@@ -44,6 +49,7 @@ namespace BP2Projekt.Models
             }
         }
 
+        
         public int FK_TimA
         {
             get => timA;
@@ -105,6 +111,71 @@ namespace BP2Projekt.Models
                     return;
 
                 rezultatB = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int FK_Liga
+        {
+            get => ligaID;
+            set
+            {
+                if (ligaID == value)
+                    return;
+
+                ligaID = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Liga
+        {
+            get => liga;
+            set
+            {
+                if (liga == value)
+                    return;
+
+                liga = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string TimA
+        {
+            get => nazivA;
+            set
+            {
+                if (nazivA == value)
+                    return;
+
+                nazivA = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string TimB
+        {
+            get => nazivB;
+            set
+            {
+                if (nazivB == value)
+                    return;
+
+                nazivB = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Pobjednik
+        {
+            get => pobjednikNaziv;
+            set
+            {
+                if (pobjednikNaziv == value)
+                    return;
+
+                pobjednikNaziv = value;
                 NotifyPropertyChanged();
             }
         }

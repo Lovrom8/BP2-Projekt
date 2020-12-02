@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BP2Projekt.Models
 {
-    public class OrganizacijaModel : INotifyPropertyChanged
+    class LigaModel : INotifyPropertyChanged
     {
         private int id;
-        private string naziv;
-        private string osnovana;
-        private string drzava;
+        private int organizator;
+        private string organizatorNaziv;
+        private string nazivLige;
 
-        public int ID_org
+        public int ID
         {
             get => id;
             set
@@ -28,39 +30,39 @@ namespace BP2Projekt.Models
 
         public string Naziv
         {
-            get => naziv;
+            get => nazivLige;
             set
             {
-                if (naziv == value)
+                if (nazivLige == value)
                     return;
 
-                naziv = value;
+                nazivLige = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public string Osnovana
+        public int FK_Organizator
         {
-            get => osnovana;
+            get => organizator;
             set
             {
-                if (osnovana == value)
+                if (organizator == value)
                     return;
 
-                osnovana = value;
+                organizator = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public string Drzava
+        public string Organizator
         {
-            get => drzava;
+            get => organizatorNaziv;
             set
             {
-                if (drzava == value)
+                if (organizatorNaziv == value)
                     return;
 
-                drzava = value;
+                organizatorNaziv = value;
                 NotifyPropertyChanged();
             }
         }

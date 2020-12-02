@@ -69,7 +69,9 @@ namespace BP2Projekt.ViewModels
                 {
                     con.Open();
 
-                    var selectSQL = new SQLiteCommand(@"SELECT * FROM Mec m 
+                    var selectSQL = new SQLiteCommand(@"SELECT m.*, t1.ID_tim AS ID_A, t2.ID_tim AS ID_B,
+                                                        t1.Naziv AS NazivA, t2.Naziv AS NazivB
+                                                        FROM Mec m 
                                                         JOIN Tim t1 ON t1.ID_tim = m.FK_timA 
                                                         JOIN Tim t2 ON t2.ID_tim = m.FK_timB
                                                         WHERE m.ID_mec=@Id ", con);
@@ -81,7 +83,7 @@ namespace BP2Projekt.ViewModels
                     if (!reader.HasRows)
                         return;
 
-                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+                    //var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
 
                     Mec = new MecModel()
                     {
@@ -93,16 +95,28 @@ namespace BP2Projekt.ViewModels
                         FK_TimB = Convert.ToInt32(reader["FK_timB"])
                     };
 
+                    /*TimA = new TimModel()
+                     {
+                         ID_Tim = reader.GetInt32(reader.GetNthOrdinal("ID_tim", 1)), // U slučaju da nismo koristili aliase, imali bi duple sutpce
+                         Naziv = reader.GetString(reader.GetNthOrdinal("Naziv", 1))
+                     };
+
+                     TimB = new TimModel()
+                     {
+                         ID_Tim = reader.GetInt32(reader.GetNthOrdinal("ID_tim", 2)),
+                         Naziv = reader.GetString(reader.GetNthOrdinal("Naziv", 2))
+                     };*/
+
                     TimA = new TimModel()
                     {
-                        ID_Tim = reader.GetInt32(reader.GetNthOrdinal("ID_tim", 1)),
-                        Naziv = reader.GetString(reader.GetNthOrdinal("Naziv", 1)) // Dva su sa ID_tim, svaki za jedan tim
+                        ID_Tim = Convert.ToInt32(reader["ID_A"]),
+                        Naziv = reader["NazivA"].ToString()
                     };
 
                     TimB = new TimModel()
                     {
-                        ID_Tim = reader.GetInt32(reader.GetNthOrdinal("ID_tim", 2)),
-                        Naziv = reader.GetString(reader.GetNthOrdinal("Naziv", 2))
+                        ID_Tim = Convert.ToInt32(reader["ID_B"]),
+                        Naziv = reader["NazivB"].ToString()
                     };
 
                     con.Close();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignExtensions.Controls;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -15,16 +16,11 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    public partial class WindowOrganizator : Window
+    public partial class WindowOrganizator : MaterialWindow
     {
         public WindowOrganizator()
         {
             InitializeComponent();
-        }
-
-        private void btnDodaj_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
