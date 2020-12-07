@@ -121,9 +121,11 @@
                     SelectionUnit="Cell"
                     SelectionMode="Extended" AutoGenerateColumns="false">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Nadimak}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
-                        <DataGridTextColumn Binding="{Binding Uloga}" Header="Organizator" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
-
+                        <DataGridTextColumn Binding="{Binding Nick}" Header="Nadimak" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                        <DataGridTextColumn Binding="{Binding UlogaNaziv}" Header="Uloga" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                        <DataGridTextColumn Binding="{Binding Drzava}" Header="Drzava" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                        <DataGridTextColumn Binding="{Binding TimNaziv}" Header="Tim" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                        <DataGridTextColumn Binding="{Binding Aktivan}" Header="Aktivan" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>

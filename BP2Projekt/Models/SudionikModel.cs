@@ -17,7 +17,9 @@ namespace BP2Projekt
         private string drzava;
         private string nick;
         private string ulogaNaziv;
+        private string timNaziv;
         private bool jeOdabran;
+        private bool aktivan;
 
         public int ID_Sudionik
         {
@@ -80,6 +82,20 @@ namespace BP2Projekt
                 NotifyPropertyChanged();
             }
         }
+
+        public string TimNaziv
+        {
+            get => timNaziv;
+            set
+            {
+                if (timNaziv == value)
+                    return;
+                timNaziv = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
         public string Nick
         {
             get => nick;
@@ -88,6 +104,19 @@ namespace BP2Projekt
                 if (nick == value)
                     return;
                 nick = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool Aktivan
+        {
+            get => aktivan;
+            set
+            {
+                if (aktivan == value)
+                    return;
+                aktivan = value;
 
                 NotifyPropertyChanged();
             }
