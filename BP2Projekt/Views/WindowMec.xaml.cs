@@ -22,7 +22,7 @@ namespace BP2Projekt
         {
             InitializeComponent();
 
-            int mecID = 2;
+            int mecID = 3;
             var _mvm = new MecViewModel(mecID);
             DataContext = _mvm;
         }

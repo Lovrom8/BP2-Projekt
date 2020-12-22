@@ -48,11 +48,11 @@
 
         <Label Content="Organizacija:" Grid.Column="1" Grid.Row="3" />
         <ComboBox Name="comboOrganizacija" Grid.Column="3" Grid.Row="3" Height="20" 
-                  ItemsSource="{Binding Path=ListaOrganizacije}" SelectedItem="{Binding Path=Organizacija}" DisplayMemberPath="Naziv"/>
+                  ItemsSource="{Binding Path=ListaOrganizacije}" SelectedItem="{Binding Path=Organizacija, Mode=TwoWay}" DisplayMemberPath="Naziv"/>
 
         <Label Content="Igra:" Grid.Column="1" Grid.Row="4" />
         <ComboBox Name="comboIgra" Grid.Column="3" Grid.Row="4" Height="20" 
-                  ItemsSource="{Binding Path=ListaIgre}" SelectedItem="{Binding Path=Igra}" DisplayMemberPath="Naziv"/>
+                  ItemsSource="{Binding Path=ListaIgre}" SelectedItem="{Binding Path=Igra, Mode=TwoWay}" DisplayMemberPath="Naziv"/>
 
         <Label Content="Uloga:" Grid.Column="1" Grid.Row="5" 
                 Visibility="{Binding IsChecked,ElementName=radioIgrac, Converter={StaticResource b2v}}" />

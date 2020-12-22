@@ -83,8 +83,6 @@ namespace BP2Projekt.ViewModels
                     if (!reader.HasRows)
                         return;
 
-                    //var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
-
                     Mec = new MecModel()
                     {
                         ID_Mec = MecID,
@@ -94,18 +92,6 @@ namespace BP2Projekt.ViewModels
                         FK_TimA = Convert.ToInt32(reader["FK_timA"]),
                         FK_TimB = Convert.ToInt32(reader["FK_timB"])
                     };
-
-                    /*TimA = new TimModel()
-                     {
-                         ID_Tim = reader.GetInt32(reader.GetNthOrdinal("ID_tim", 1)), // U slučaju da nismo koristili aliase, imali bi duple sutpce
-                         Naziv = reader.GetString(reader.GetNthOrdinal("Naziv", 1))
-                     };
-
-                     TimB = new TimModel()
-                     {
-                         ID_Tim = reader.GetInt32(reader.GetNthOrdinal("ID_tim", 2)),
-                         Naziv = reader.GetString(reader.GetNthOrdinal("Naziv", 2))
-                     };*/
 
                     TimA = new TimModel()
                     {
@@ -149,13 +135,12 @@ namespace BP2Projekt.ViewModels
                 using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
                 {
                     con.Open();
-                    var selectSQL = new SQLiteCommand(@"SELECT * FROM Igrac m 
-                                                        WHERE m.FK_tim=@Id ", con);
+                    var selectSQL = new SQLiteCommand(@"SELECT * FROM Sudionik S 
+                                                        WHERE S.FK_tim=@Id AND EXISTS ( SELECT * FROM Igrac WHERE FK_sudionik = S.ID_sudionik)", con);
                     selectSQL.Parameters.AddWithValue("@Id", timID);
 
                     var reader = selectSQL.ExecuteReader();
 
-                    reader.Read();
                     if (!reader.HasRows)
                         return igraci;
 
@@ -163,9 +148,9 @@ namespace BP2Projekt.ViewModels
                     {
                         igraci.Add(new IgracModel()
                         {
-                            ID_Sudionik = Convert.ToInt32(s["ID_igrac"].ToString()),
+                            ID_Sudionik = Convert.ToInt32(s["ID_sudionik"].ToString()),
                             Drzava = s["Drzava"].ToString(),
-                            Nick = s["Nick"].ToString()
+                            Nick = s["Nadimak"].ToString()
                         });
                     }
                 }
@@ -212,7 +197,7 @@ namespace BP2Projekt.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                MessageBox.Show($"Neuspješna promjena timova, greška: {ex.Message}");
             }
         }
 
@@ -237,7 +222,7 @@ namespace BP2Projekt.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                MessageBox.Show($"Neuspješno spremanje timova, greška: {ex.Message}");
             }
 
             Vidljivost = Visibility.Collapsed;

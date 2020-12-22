@@ -11,9 +11,11 @@ namespace BP2Projekt.Models
     class LigaModel : INotifyPropertyChanged
     {
         private int id;
+        private int idIgra;
         private int organizator;
         private string organizatorNaziv;
         private string nazivLige;
+        private string igra;
 
         public int ID
         {
@@ -63,6 +65,32 @@ namespace BP2Projekt.Models
                     return;
 
                 organizatorNaziv = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int FK_Igra
+        {
+            get => idIgra;
+            set
+            {
+                if (idIgra == value)
+                    return;
+
+                idIgra = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Igra
+        {
+            get => igra;
+            set
+            {
+                if (igra == value)
+                    return;
+
+                igra = value;
                 NotifyPropertyChanged();
             }
         }

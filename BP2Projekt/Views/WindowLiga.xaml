@@ -1,4 +1,4 @@
-﻿<mde:MaterialWindow x:Class="BP2Projekt.WindowOrganizator"
+﻿<mde:MaterialWindow x:Class="BP2Projekt.WindowLiga"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
         mc:Ignorable="d"
-        Title="Novi organizator" Height="250" Width="350"
+        Title="Nova liga" Height="300" Width="350"
         Icon="../Resources/esportsIco.png"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}">
@@ -22,7 +22,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Name="igracGrid" Background="LightGray">
+    <Grid Name="ligaGrid" Background="LightGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
             <RowDefinition Height="27" />
@@ -30,6 +30,8 @@
             <RowDefinition Height="27" />
             <RowDefinition Height="27" />
             <RowDefinition Height="28" />
+            <RowDefinition Height="28" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
@@ -43,21 +45,22 @@
 
         <Label Content="Naziv:" Grid.Column="1" Grid.Row="1" />
         <TextBox Name="tbNaziv" Grid.Column="3" Grid.Row="1" Height="20" 
-                 Text="{Binding Path=Organizator.Naziv}"/>
+                 Text="{Binding Path=Liga.Naziv}"/>
 
-        <Label Content="Osnovan u:" Grid.Column="1" Grid.Row="2" />
-        <TextBox Name="tbOsnovana" Grid.Column="3" Grid.Row="2" Height="20" HorizontalAlignment="Left" Width="50"
-                 Text="{Binding Path=Organizator.Osnovan}"/>
+        <Label Content="Organizator:" Grid.Column="1" Grid.Row="3" />
+        <ComboBox Grid.Column="3" Grid.Row="3" Name="comboOrganizatori" Height="25"
+                  ItemsSource="{Binding ListaOrganizatori}" SelectedItem="{Binding Organizator}" DisplayMemberPath="Naziv" />
 
-        <Label Content="Država:" Grid.Column="1" Grid.Row="3" />
-        <TextBox Name="tbDrzava" Grid.Column="3" Grid.Row="3" Height="20" HorizontalAlignment="Left" Width="100"
-                 Text="{Binding Path=Organizator.Drzava}"/>
+        <Label Content="Igra:" Grid.Column="1" Grid.Row="5" />
+        <ComboBox Grid.Column="3" Grid.Row="5" Name="comboIgre" Height="25"
+                  ItemsSource="{Binding ListaIgre}" SelectedItem="{Binding Igra}" DisplayMemberPath="Naziv" />
 
-        <Button Name="btnDodaj" HorizontalAlignment="Right" Margin="3" MinWidth="80"  Grid.Column="3" Grid.Row="5" Command="{Binding Path=DodajIliOsvjeziCommand}">
+        <Button Name="btnDodaj" HorizontalAlignment="Right" Margin="3" MinWidth="80"  Grid.Column="3" Grid.Row="7" Command="{Binding Path=DodajIliOsvjeziCommand}">
             <TextBlock>Dodaj</TextBlock>
         </Button>
 
-        <StatusBar Grid.Row="7" HorizontalAlignment="Stretch" Grid.ColumnSpan="5">
+
+        <StatusBar Grid.Row="9" HorizontalAlignment="Stretch" Grid.ColumnSpan="5">
             <StatusBarItem>
                 <TextBlock Name="lblStatus" />
             </StatusBarItem>

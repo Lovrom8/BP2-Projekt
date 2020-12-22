@@ -45,7 +45,19 @@ namespace BP2Projekt.ViewModels
             PopuniSudionike();
         }
 
-        private void OtvoriSudionike() => ProzorManager.Prikazi("ProzorSudionici");
+        private void OtvoriSudionike()
+        {
+            //ProzorManager.Prikazi("ProzorSudionici");
+
+            SudionikModel noviSudionik = new SudionikModel();
+            var childWindow = new WindowSudionik();
+            var childWindowViewModel = new SudionikViewModel(noviSudionik);
+            childWindow.DataContext = childWindowViewModel;
+            childWindow.Show();
+
+            int x = 0;
+        }
+
         private void OtvoriIgrace() => ProzorManager.Prikazi("ProzorTim");
         private void OtvoriOrganizatora() => ProzorManager.Prikazi("ProzorOrganizator");
 
@@ -159,7 +171,7 @@ namespace BP2Projekt.ViewModels
                         return;
 
                     ListaSudionici.Clear();
-                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+                   
                     foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
                     {
                         ListaSudionici.Add(new SudionikModel()

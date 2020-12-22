@@ -1,26 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BP2Projekt.Models
 {
-    public class IgraModel : INotifyPropertyChanged
+    class OrganizatorModel
     {
         private int id;
-        private string zanr;
         private string naziv;
-        private int idProizvodac;
-        private string proizvodacNaziv;
+        private string drzava;
+        private string osnovan;
 
-        public int ID_Igra
+        public int ID_Organizator
         {
             get => id;
             set
             {
                 if (id == value)
                     return;
-
                 id = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Osnovan
+        {
+            get => osnovan;
+            set
+            {
+                if (osnovan == value)
+                    return;
+
+                osnovan = value;
                 NotifyPropertyChanged();
             }
         }
@@ -32,47 +48,21 @@ namespace BP2Projekt.Models
             {
                 if (naziv == value)
                     return;
-
                 naziv = value;
+
                 NotifyPropertyChanged();
             }
         }
 
-        public string Zanr
+        public string Drzava
         {
-            get => zanr;
+            get => drzava;
             set
             {
-                if (zanr == value)
+                if (drzava == value)
                     return;
+                drzava = value;
 
-                zanr = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public int FK_Proizvodac
-        {
-            get => idProizvodac;
-            set
-            {
-                if (idProizvodac == value)
-                    return;
-
-                idProizvodac = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public string Proizvodac
-        {
-            get => proizvodacNaziv;
-            set
-            {
-                if (proizvodacNaziv == value)
-                    return;
-
-                proizvodacNaziv = value;
                 NotifyPropertyChanged();
             }
         }

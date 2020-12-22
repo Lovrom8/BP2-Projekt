@@ -10,18 +10,19 @@ namespace BP2Projekt.Models
 {
     public class UlogaModel : INotifyPropertyChanged
     {
-        private int ID_uloga;
-        private int igra;
+        private int idUloga;
+        private int idIgra;
+        private string igraNaziv;
         private string naziv;
 
         public int ID_Uloga
         {
-            get => ID_uloga;
+            get => idUloga;
             set
             {
-                if (ID_uloga == value)
+                if (idUloga == value)
                     return;
-                ID_uloga = value;
+                idUloga = value;
 
                 NotifyPropertyChanged();
             }
@@ -40,14 +41,27 @@ namespace BP2Projekt.Models
             }
         }
 
-        public int Igra 
+        public int ID_Igra
         {
-            get => igra;
+            get => idIgra;
             set
             {
-                if (igra == value)
+                if (idIgra == value)
                     return;
-                igra = value;
+                idIgra = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string IgraNaziv 
+        {
+            get => igraNaziv;
+            set
+            {
+                if (igraNaziv == value)
+                    return;
+                igraNaziv = value;
 
                 NotifyPropertyChanged();
             } 

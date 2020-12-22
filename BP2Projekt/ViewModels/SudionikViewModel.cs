@@ -40,7 +40,7 @@ namespace BP2Projekt.ViewModels
         }
         public IgracTrenerRadioModel RadioModel { get; set; }
 
-        public SudionikViewModel(string nick)
+        public SudionikViewModel(SudionikModel sudionici)
         {
             _dodajSudionikaCmd = new DelegateCommand(DodajSudionika);
             Sudionik = new SudionikModel();
@@ -52,9 +52,11 @@ namespace BP2Projekt.ViewModels
             ListaUloge = new ObservableCollection<UlogaModel>();
             ListaIgre = new ObservableCollection<IgraModel>();
 
-            PopuniInfo(nick);
+            sudionici.Nick = "lel2";
+
             PopuniOrganizacije();
             PopuniIgre();
+           // PopuniInfo(nick);
         }
 
         private void PopuniIgre()
@@ -118,7 +120,7 @@ namespace BP2Projekt.ViewModels
                         ListaUloge.Add(new UlogaModel()
                         {
                             ID_Uloga = Convert.ToInt32(s["ID_uloga"].ToString()),
-                            Naziv = s["Naziv"].ToString()
+                            Naziv = s["NazivUloge"].ToString()
                         });
                     }
                 }
@@ -153,7 +155,7 @@ namespace BP2Projekt.ViewModels
                         ListaOrganizacije.Add(new OrganizacijaModel()
                         {
                             ID_org = Convert.ToInt32(s["ID_org"].ToString()),
-                            Naziv = s["Naziv"].ToString()
+                            Naziv = s["NazivOrganizacije"].ToString()
                         });
                     }
                 }
@@ -173,7 +175,12 @@ namespace BP2Projekt.ViewModels
 
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT * FROM Igrac WHERE Nick=@Nick UNION SELECT *, NULL FROM Trener WHERE Nick=@Nick LIMIT 1", con);
+                var selectSQL = new SQLiteCommand(@"SELECT S.*, T.Naziv AS NazivTima, O.*, I.ID_igra FROM Sudionik S 
+                                                    JOIN Tim T ON S.FK_tim = T.ID_tim
+                                                    JOIN Organizacija O ON O.ID_org = T.FK_organizacija 
+                                                    JOIN Igra I ON I.ID_igra = T.FK_igra
+                                                    WHERE Nadimak=@Nick 
+                                                    ", con);
                 selectSQL.Parameters.AddWithValue("@Nick", nick);
 
                 con.Open();
@@ -186,20 +193,16 @@ namespace BP2Projekt.ViewModels
                     if (!reader.HasRows)
                         return;
 
-                    if (SQLUtil.ColumnExists(reader, "ID_igrac"))
-                    {
-                        Sudionik.ID_Sudionik = Convert.ToInt32(reader["ID_igrac"].ToString());
-                        Sudionik.ID_Uloga = Convert.ToInt32(reader["FK_uloga"].ToString());
-                    }
-                    else
-                    {
-                        Sudionik.ID_Sudionik = Convert.ToInt32(reader["ID_trener"].ToString());
-                        Sudionik.ID_Uloga = -1;
-                    }
+                    Sudionik.ID_Sudionik = Convert.ToInt32(reader["ID_sudionik"].ToString());
+                    Sudionik.ID_Uloga = 0;
 
                     Sudionik.ID_Tim = Convert.ToInt32(reader["FK_tim"].ToString());
                     Sudionik.Drzava = reader["Drzava"].ToString();
-                    Sudionik.Nick = reader["Nick"].ToString();
+                    Sudionik.Nick = reader["Nadimak"].ToString();
+                    Sudionik.TimNaziv = reader["NazivTima"].ToString();
+
+                    Organizacija = ListaOrganizacije.FirstOrDefault(org => org.ID_org == Convert.ToInt32(reader["ID_org"]));
+                    Igra = ListaIgre.FirstOrDefault(igra => igra.ID_Igra == Convert.ToInt32(reader["ID_igra"]));
                 }
                 catch (Exception ex)
                 {

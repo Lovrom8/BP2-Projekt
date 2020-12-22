@@ -2,7 +2,6 @@
 using MaterialDesignExtensions.Controls;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,15 +16,18 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    public partial class WindowSudionik : MaterialWindow
+    /// <summary>
+    /// Interaction logic for WindowLiga.xaml
+    /// </summary>
+    public partial class WindowLiga : MaterialWindow
     {
-        public WindowSudionik()
+        public WindowLiga()
         {
             InitializeComponent();
 
-            //var _svm = new SudionikViewModel("ropz");
-            //DataContext = _svm;
-            
+            int ID = 1;
+            var _lvm = new LigaViewModel(ID);
+            DataContext = _lvm;
         }
     }
 }

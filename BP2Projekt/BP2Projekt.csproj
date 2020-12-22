@@ -124,19 +124,33 @@
     <Compile Include="Models\MecModel.cs" />
     <Compile Include="Models\OrganizacijaModel.cs" />
     <Compile Include="Baza\SQLPostavke.cs" />
+    <Compile Include="Models\OrganizatorModel.cs" />
     <Compile Include="Models\SudionikModel.cs" />
     <Compile Include="Models\TimModel.cs" />
     <Compile Include="Models\UlogaModel.cs" />
     <Compile Include="Util\ProzorManager.cs" />
     <Compile Include="ViewModels\GlavniViewModel.cs" />
     <Compile Include="ViewModels\IgracTrenerRadioModel.cs" />
+    <Compile Include="ViewModels\LigaViewModel.cs" />
     <Compile Include="ViewModels\MecViewModel.cs" />
     <Compile Include="ViewModels\OrganizacijaViewModel.cs" />
     <Compile Include="Util\GodinaValidationRule.cs" />
+    <Compile Include="ViewModels\OrganizatorViewModel.cs" />
+    <Compile Include="ViewModels\ProizvodacViewModel.cs" />
     <Compile Include="ViewModels\SudionikViewModel.cs" />
     <Compile Include="ViewModels\TimViewModel.cs" />
+    <Compile Include="ViewModels\UlogaViewModel.cs" />
+    <Compile Include="Views\WindowIgra.xaml.cs">
+      <DependentUpon>WindowIgra.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WindowLiga.xaml.cs">
+      <DependentUpon>WindowLiga.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\WindowMec.xaml.cs">
       <DependentUpon>WindowMec.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WindowProizvodac.xaml.cs">
+      <DependentUpon>WindowProizvodac.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WindowTim.xaml.cs">
       <DependentUpon>WindowTim.xaml</DependentUpon>
@@ -150,6 +164,9 @@
     <Compile Include="Views\WindowOrganizator.xaml.cs">
       <DependentUpon>WindowOrganizator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\WindowUloga.xaml.cs">
+      <DependentUpon>WindowUloga.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\WindowGlavni.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -162,7 +179,19 @@
       <DependentUpon>WindowGlavni.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\WindowIgra.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WindowLiga.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\WindowMec.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WindowProizvodac.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -179,6 +208,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\WindowOrganizator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WindowUloga.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -48,7 +48,7 @@ namespace BP2Projekt
 
                     reader.Read();
                     Organizacija.ID_org = ID;
-                    Organizacija.Naziv = reader["Naziv"].ToString();
+                    Organizacija.Naziv = reader["NazivOrganizacije"].ToString();
                     Organizacija.Drzava = reader["Drzava"].ToString();
                     Organizacija.Osnovana = reader["Osnovana"].ToString();
                 }
@@ -67,12 +67,14 @@ namespace BP2Projekt
             {
                 con.Open();
 
-                var insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Organizacija (ID_org, Naziv, Osnovana, Drzava) VALUES (@Id, @Naziv, @Osnovana, @Drzava)", con);
+                var insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Organizacija (ID_org, NazivOrganizacije, Osnovana, Drzava) VALUES (@Id, @Naziv, @Osnovana, @Drzava)", con);
 
                 insertSQL.Parameters.AddWithValue("@Id", Organizacija.ID_org);
                 insertSQL.Parameters.AddWithValue("@Naziv", Organizacija.Naziv);
                 insertSQL.Parameters.AddWithValue("@Osnovana", Organizacija.Osnovana);
                 insertSQL.Parameters.AddWithValue("@Drzava", Organizacija.Drzava);
+
+                MessageBox.Show("Organizacija dodana u bazu!", "Dodano!");
 
                 try
                 {
@@ -86,7 +88,7 @@ namespace BP2Projekt
                 con.Close();
             }
 
-            MessageBox.Show("Organizacija dodana u bazu!", "Dodano!");
+           
         }
     }
 }

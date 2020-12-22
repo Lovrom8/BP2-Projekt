@@ -1,4 +1,5 @@
-﻿using MaterialDesignExtensions.Controls;
+﻿using BP2Projekt.ViewModels;
+using MaterialDesignExtensions.Controls;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,6 +22,10 @@ namespace BP2Projekt
         public WindowOrganizator()
         {
             InitializeComponent();
+
+            int ID = -1;
+            var _ovm = new OrganizatorViewModel(ID);
+            DataContext = _ovm;
         }
     }
 }
