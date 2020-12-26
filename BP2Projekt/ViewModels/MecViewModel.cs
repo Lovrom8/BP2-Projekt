@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
 {
-    class MecViewModel : BaseViewModel
+    class MecViewModel : BazniDialogViewModel
     {
         private readonly DelegateCommand _promjeniTimoveCommand;
         public ICommand PromjeniTimoveCommand => _promjeniTimoveCommand;

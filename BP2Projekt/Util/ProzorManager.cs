@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Services.Dialogs;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,6 @@ namespace BP2Projekt.Util
                 _Prozori.Remove(key);
         }
 
-        //public static void Prikazi(string key, ObservableCollection /*object VM = null*/)
         public static void Prikazi(string key, object VM = null)
         {
             if (_Prozori.ContainsKey(key))
@@ -40,6 +40,12 @@ namespace BP2Projekt.Util
                 win.Owner = Application.Current.MainWindow;
                 win.Show();
             }
+        }
+
+        public static void ShowWindowTest(this IDialogService dialogService, Action<IDialogResult> action, string prozor)
+        {
+           
+           // dialogService.ShowDialog(nameof(_Prozori[prozor]), new DialogParameters(), action);
         }
     }
 }

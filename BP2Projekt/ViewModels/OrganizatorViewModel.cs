@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
 {
-    class OrganizatorViewModel : BaseViewModel
+    class OrganizatorViewModel : BazniDialogViewModel
     {
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;

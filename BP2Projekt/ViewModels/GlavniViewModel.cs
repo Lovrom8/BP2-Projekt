@@ -2,6 +2,8 @@
 using BP2Projekt.Util;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,37 +18,47 @@ using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
 {
-    class GlavniViewModel : BaseViewModel
+    class GlavniViewModel : BindableBase
     {
         private readonly DelegateCommand _otvoriSudionikeCmd;
         private readonly DelegateCommand _otvoriTimoveCmd;
         private readonly DelegateCommand _otvoriOrganizatoraCmd;
+        private readonly DelegateCommand _otvoriOrganizacijuCmd;
 
         public ICommand OtvoriSudionikeCommand => _otvoriSudionikeCmd;
         public ICommand OtvoriTimoveCommand => _otvoriTimoveCmd;
         public ICommand OtvoriOrganizatoraCommand => _otvoriOrganizatoraCmd;
+        public ICommand OtvoriOrganizacijuCommand => _otvoriOrganizacijuCmd;
 
         public ObservableCollection<MecModel> ListaMecevi { get; set; }
         public ObservableCollection<LigaModel> ListaLige { get; set; }
         public ObservableCollection<SudionikModel> ListaSudionici { get; set; }
         public ObservableCollection<IgraModel> ListaIgre { get; set; }
         public ObservableCollection<TimModel> ListaTimovi { get; set; }
+        public ObservableCollection<OrganizacijaModel> ListaOrganizacije { get; set; }
 
-        public GlavniViewModel()
+        private IDialogService _dialogService { get; }
+
+        public GlavniViewModel(IDialogService dialogService)
         {
             _otvoriSudionikeCmd = new DelegateCommand(OtvoriSudionike);
             _otvoriTimoveCmd = new DelegateCommand(OtvoriIgrace);
             _otvoriOrganizatoraCmd = new DelegateCommand(OtvoriOrganizatora);
+            _otvoriOrganizacijuCmd = new DelegateCommand(OtvoriOrganizaciju);
 
             ListaMecevi = new ObservableCollection<MecModel>();
             ListaLige = new ObservableCollection<LigaModel>();
             ListaSudionici = new ObservableCollection<SudionikModel>();
             ListaIgre = new ObservableCollection<IgraModel>();
+            ListaOrganizacije = new ObservableCollection<OrganizacijaModel>();
 
             PopuniMečeve();
             PopuniLige();
             PopuniSudionike();
             PopuniIgre();
+            PopuniOrganizacije();
+
+            _dialogService = dialogService;
         }
 
         private void OtvoriSudionike()
@@ -64,6 +76,17 @@ namespace BP2Projekt.ViewModels
 
         private void OtvoriIgrace() => ProzorManager.Prikazi("ProzorTim");
         private void OtvoriOrganizatora() => ProzorManager.Prikazi("ProzorOrganizator");
+
+        private void OtvoriOrganizaciju() => OtvoriOrganizacije(-1);
+
+        private void OtvoriOrganizacije(int orgID)
+        {
+            _dialogService.ShowDialog("OrganizacijaProzor", new DialogParameters
+            {
+                { "listaOrganizacija", ListaOrganizacije},
+                { "idOrg", orgID}
+            }, r => { });
+        }
 
         private void PopuniMečeve()
         {
@@ -242,6 +265,41 @@ namespace BP2Projekt.ViewModels
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Neuspješno čitanje igara iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void PopuniOrganizacije()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Organizacija", con);
+
+                con.Open();
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    if (!reader.HasRows)
+                        return;
+
+                    ListaOrganizacije.Clear();
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        ListaOrganizacije.Add(new OrganizacijaModel()
+                        {
+                            ID_Organizacija = Convert.ToInt32(s["ID_org"]),
+                            Naziv = s["NazivOrganizacije"].ToString()
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno čitanje organizacija iz baze, greška: {ex.Message}");
                 }
 
                 con.Close();

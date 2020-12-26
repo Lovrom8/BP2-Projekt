@@ -1,4 +1,4 @@
-﻿<mde:MaterialWindow x:Class="BP2Projekt.WindowOrganizacija"
+﻿<UserControl x:Class="BP2Projekt.WindowOrganizacija"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,14 +7,9 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
         mc:Ignorable="d"
-        Title="Nova organizacija" Height="250" Width="350"
-        Icon="../Resources/esportsIco.png"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         >
-    <Window.DataContext>
-        <baza:OrganizacijaModel/>
-    </Window.DataContext>
     <Grid Name="igracGrid" Background="LightGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -60,4 +55,4 @@
             </StatusBarItem>
         </StatusBar>
     </Grid>
-</mde:MaterialWindow>
+</UserControl>

@@ -1,8 +1,11 @@
 ﻿using BP2Projekt.Models;
+using BP2Projekt.ViewModels;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.Globalization;
 using System.Linq;
@@ -13,18 +16,37 @@ using System.Windows.Input;
 
 namespace BP2Projekt
 {
-    class OrganizacijaViewModel : BaseViewModel
+    class OrganizacijaViewModel : BazniDialogViewModel
     {
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
+
+        public event Action<IDialogResult> RequestClose;
+        public DelegateCommand CloseDialogCommand { get; set; }
+
+        private ObservableCollection<OrganizacijaModel> _listaOrganizacija;
+
+        public ObservableCollection<OrganizacijaModel> ListaOrganizacija
+        {
+            get => _listaOrganizacija;
+            set => SetProperty(ref _listaOrganizacija, value);
+        }
+
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;
         public OrganizacijaModel Organizacija { get; }
 
-        public OrganizacijaViewModel(int ID)
+        private int _idOrg;
+        public int ID_Org
+        {
+            get => _idOrg;
+            set => SetProperty(ref _idOrg, value);
+        }
+
+        public OrganizacijaViewModel()
         {
             _dodajIliOsvjeziCommand = new DelegateCommand(DodajIliOsvjezi);
             Organizacija = new OrganizacijaModel();
 
-            UcitajOrganizaciju(ID);
+            CloseDialogCommand = new DelegateCommand(() => RequestClose(null));
         }
 
         private void UcitajOrganizaciju(int ID)
@@ -96,6 +118,20 @@ namespace BP2Projekt
 
                 con.Close();
             }
+        }
+
+        public override bool CanCloseDialog() => true;
+
+        public override void OnDialogClosed() => Console.WriteLine("Gasim prozor Organizacija...");
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
+            ListaOrganizacija = parameters.GetValue<ObservableCollection<OrganizacijaModel>>("listaOrganizacija");
+            ID_Org = parameters.GetValue<int>("idOrg");
+
+            UcitajOrganizaciju(ID_Org);
+
+            ListaOrganizacija.FirstOrDefault(r => r.ID_Organizacija == 1).Naziv = "gejorg";
         }
     }
 }

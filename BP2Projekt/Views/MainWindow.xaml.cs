@@ -25,14 +25,6 @@ namespace BP2Projekt
         public MainWindow()
         {
             InitializeComponent();
-
-            this.DataContext = new GlavniViewModel();
-
-            ProzorManager.Registriraj<WindowSudionik>("ProzorSudionici");
-            ProzorManager.Registriraj<WindowOrganizator>("ProzorOrganizator");
-            ProzorManager.Registriraj<WindowTim>("ProzorTim");
-            ProzorManager.Registriraj<WindowOrganizacija>("ProzorOrganizacija");
-            ProzorManager.Registriraj<WindowOrganizator>("ProzorOrganizator");
         }
     }
 }

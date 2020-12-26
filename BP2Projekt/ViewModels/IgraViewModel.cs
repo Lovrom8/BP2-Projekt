@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
 {
-    class IgraViewModel : BaseViewModel
+    class IgraViewModel : BazniDialogViewModel
     {
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;
@@ -30,7 +30,7 @@ namespace BP2Projekt.ViewModels
             {
                 proizvodac = value;
                 Igra.FK_Proizvodac = value.ID;
-                OnPropertyChanged("Proizvodac");
+               // OnPropertyChanged("Proizvodac");
             }
         }
 

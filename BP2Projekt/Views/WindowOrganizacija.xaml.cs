@@ -12,15 +12,15 @@ using MaterialDesignExtensions.Controls;
 
 namespace BP2Projekt
 {
-    public partial class WindowOrganizacija : MaterialWindow
+    public partial class WindowOrganizacija 
     {
         public WindowOrganizacija()
         {
             InitializeComponent();
 
-            int ID = 2;
-            var _ovm = new OrganizacijaViewModel(ID);
-            DataContext = _ovm;
+            //int ID = 2;
+            //var _ovm = new OrganizacijaViewModel(ID);
+            //DataContext = _ovm;
         }
     }
 }

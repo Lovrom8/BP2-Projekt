@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
 {
-    class UlogaViewModel : BaseViewModel
+    class UlogaViewModel : BazniDialogViewModel
     {
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;
@@ -30,7 +30,7 @@ namespace BP2Projekt.ViewModels
                 igra = value;
                 Uloga.ID_Igra = value.ID_Igra;
                 Uloga.IgraNaziv = value.Naziv;
-                OnPropertyChanged("Igra");
+                //OnPropertyChanged("Igra");
             }
         }
         public ObservableCollection<IgraModel> ListaIgre { get; set; }
@@ -40,7 +40,7 @@ namespace BP2Projekt.ViewModels
             set
             {
                 uloga = value;
-                OnPropertyChanged("Uloga");
+                //OnPropertyChanged("Uloga");
             }
         }
 

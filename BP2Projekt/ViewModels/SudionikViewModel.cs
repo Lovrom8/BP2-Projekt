@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
 {
-    public class SudionikViewModel : BaseViewModel
+    public class SudionikViewModel : BazniDialogViewModel
     {
         private readonly DelegateCommand _dodajSudionikaCmd;
         public ICommand DodajSudionikaCommand => _dodajSudionikaCmd;

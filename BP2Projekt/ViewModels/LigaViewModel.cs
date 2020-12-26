@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
 {
-    class LigaViewModel : BaseViewModel
+    class LigaViewModel : BazniDialogViewModel
     {
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;

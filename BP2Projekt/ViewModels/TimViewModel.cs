@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
 {
-    class TimViewModel : BaseViewModel
+    class TimViewModel : BazniDialogViewModel
     {
         private readonly DelegateCommand _dodajIgracaCmd;
         private readonly DelegateCommand _obirisiIgracaCmd;

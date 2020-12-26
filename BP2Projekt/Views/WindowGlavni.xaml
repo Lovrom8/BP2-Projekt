@@ -72,12 +72,12 @@
                                 </Button.Foreground>
                             </Button>
 
-                            <Button ToolTip="Dodaj sudionike" Content="Liga" />
-                            <Button ToolTip="Dodaj sudionike" Content="Orgor" />
-                            <Button ToolTip="Dodaj sudionike" Content="Proiz" />
-                            <Button ToolTip="Dodaj sudionike" Content="Orgzc" />
-                            <Button ToolTip="Dodaj sudionike" Content="Tim" />
-                            <Button ToolTip="Dodaj sudionike" Content="Uloga" />
+                            <Button ToolTip="Dodaj ligu" Content="Liga" />
+                            <Button ToolTip="Dodaj organizatora" Content="Orgor" />
+                            <Button ToolTip="Dodaj proizvođača" Content="Proiz" />
+                            <Button ToolTip="Dodaj organizaciju" Content="Orgzc" Command="{Binding OtvoriOrganizacijuCommand}" />
+                            <Button ToolTip="Dodaj tim" Content="Tim" />
+                            <Button ToolTip="Dodaj ulogu" Content="Uloga" />
                             <!--
                             <Button ToolTip="Email" Background="{DynamicResource SecondaryHueMidBrush}" Foreground="{DynamicResource SecondaryHueMidForegroundBrush}" Content="{materialDesign:PackIcon Kind=Email, Size=20}"/>
 
