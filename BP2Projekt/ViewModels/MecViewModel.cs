@@ -63,6 +63,9 @@ namespace BP2Projekt.ViewModels
 
         private void PopuniInfo(int MecID)
         {
+            if (MecID == -1)
+                return;
+
             try
             {
                 using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
@@ -209,7 +212,15 @@ namespace BP2Projekt.ViewModels
                 {
                     con.Open();
 
-                    var updateSQL = new SQLiteCommand(@"UPDATE Mec SET FK_timA = @TimAId, FK_timB = @TimBId WHERE ID_mec=@MecID", con);
+                    SQLiteCommand updateSQL;
+                    string sqlStr;
+
+                    if (Mec.ID_Mec != -1)
+                        sqlStr = @"UPDATE Mec SET FK_timA = @TimAId, FK_timB = @TimBId WHERE ID_mec=@MecID";
+                    else
+                        sqlStr = @"INSERT INTO Mec (FK_timA, FK_timB) VALUES (@TimAId, @TimBId)";
+
+                    updateSQL = new SQLiteCommand(sqlStr, con);
                     updateSQL.Parameters.AddWithValue("@TimAId", TimA.ID_Tim);
                     updateSQL.Parameters.AddWithValue("@TimBId", TimB.ID_Tim);
                     updateSQL.Parameters.AddWithValue("@MecID", Mec.ID_Mec);

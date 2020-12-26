@@ -11,6 +11,7 @@ namespace BP2Projekt.Models
         private string naziv;
         private int idProizvodac;
         private string proizvodacNaziv;
+        private int maxIgraca;
 
         public int ID_Igra
         {
@@ -73,6 +74,19 @@ namespace BP2Projekt.Models
                     return;
 
                 proizvodacNaziv = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int MaxIgraca
+        {
+            get => maxIgraca;
+            set
+            {
+                if (maxIgraca == value)
+                    return;
+
+                maxIgraca = value;
                 NotifyPropertyChanged();
             }
         }

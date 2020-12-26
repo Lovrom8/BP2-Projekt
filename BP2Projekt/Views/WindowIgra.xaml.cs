@@ -1,4 +1,5 @@
-﻿using MaterialDesignExtensions.Controls;
+﻿using BP2Projekt.ViewModels;
+using MaterialDesignExtensions.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,10 @@ namespace BP2Projekt
         public WindowIgra()
         {
             InitializeComponent();
+
+            int ID = -1;
+            var _ivm = new IgraViewModel(ID);
+            DataContext = _ivm;
         }
     }
 }

@@ -125,12 +125,14 @@
     <Compile Include="Models\OrganizacijaModel.cs" />
     <Compile Include="Baza\SQLPostavke.cs" />
     <Compile Include="Models\OrganizatorModel.cs" />
+    <Compile Include="Models\ProizvodacModel.cs" />
     <Compile Include="Models\SudionikModel.cs" />
     <Compile Include="Models\TimModel.cs" />
     <Compile Include="Models\UlogaModel.cs" />
     <Compile Include="Util\ProzorManager.cs" />
     <Compile Include="ViewModels\GlavniViewModel.cs" />
     <Compile Include="ViewModels\IgracTrenerRadioModel.cs" />
+    <Compile Include="ViewModels\IgraViewModel.cs" />
     <Compile Include="ViewModels\LigaViewModel.cs" />
     <Compile Include="ViewModels\MecViewModel.cs" />
     <Compile Include="ViewModels\OrganizacijaViewModel.cs" />

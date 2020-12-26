@@ -29,6 +29,8 @@ namespace BP2Projekt.ViewModels
         public ObservableCollection<MecModel> ListaMecevi { get; set; }
         public ObservableCollection<LigaModel> ListaLige { get; set; }
         public ObservableCollection<SudionikModel> ListaSudionici { get; set; }
+        public ObservableCollection<IgraModel> ListaIgre { get; set; }
+        public ObservableCollection<TimModel> ListaTimovi { get; set; }
 
         public GlavniViewModel()
         {
@@ -39,10 +41,12 @@ namespace BP2Projekt.ViewModels
             ListaMecevi = new ObservableCollection<MecModel>();
             ListaLige = new ObservableCollection<LigaModel>();
             ListaSudionici = new ObservableCollection<SudionikModel>();
+            ListaIgre = new ObservableCollection<IgraModel>();
 
             PopuniMečeve();
             PopuniLige();
             PopuniSudionike();
+            PopuniIgre();
         }
 
         private void OtvoriSudionike()
@@ -106,7 +110,7 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno čitanje mečeva iz baze, greška: {ex.Message}");
                 }
 
                 con.Close();
@@ -117,7 +121,7 @@ namespace BP2Projekt.ViewModels
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT L.*, O.Naziv AS OrganizatorNaziv FROM Liga L
+                var selectSQL = new SQLiteCommand(@"SELECT L.*, O.NazivOrganizatora AS OrganizatorNaziv FROM Liga L
                                                     JOIN Organizator O ON L.FK_organizator = O.ID_organizator
                                                     ", con);
 
@@ -129,6 +133,7 @@ namespace BP2Projekt.ViewModels
 
                     if (!reader.HasRows)
                         return;
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
 
                     ListaLige.Clear();
 
@@ -137,7 +142,7 @@ namespace BP2Projekt.ViewModels
                         ListaLige.Add(new LigaModel()
                         {
                             ID = Convert.ToInt32(s["ID_liga"].ToString()),
-                            Naziv = s["Naziv"].ToString(),
+                            Naziv = s["NazivLige"].ToString(),
                             FK_Organizator = Convert.ToInt32(s["FK_organizator"].ToString()),
                             Organizator = s["OrganizatorNaziv"].ToString()
                         });
@@ -145,7 +150,7 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno čitanje liga iz baze, greška: {ex.Message}");
                 }
 
                 con.Close();
@@ -171,7 +176,7 @@ namespace BP2Projekt.ViewModels
                         return;
 
                     ListaSudionici.Clear();
-                   
+
                     foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
                     {
                         ListaSudionici.Add(new SudionikModel()
@@ -195,6 +200,48 @@ namespace BP2Projekt.ViewModels
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void PopuniIgre()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var selectSQL = new SQLiteCommand(@"SELECT I.ID_igra, I.Zanr, I.NazivIgre, I.MaxIgraca, I.FK_proizvodac, 
+                                                    P.NazivProizvodaca FROM Igra I 
+                                                    JOIN Proizvodac P ON P.ID_proizvodac = I.FK_proizvodac 
+                                                    ", con);
+
+                con.Open();
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    if (!reader.HasRows)
+                        return;
+
+                    ListaIgre.Clear();
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        ListaIgre.Add(new IgraModel()
+                        {
+                            ID_Igra = Convert.ToInt32(s["ID_igra"]),
+                            Zanr = s["Zanr"].ToString(),
+                            Naziv = s["NazivIgre"].ToString(),
+                            MaxIgraca = Convert.ToInt32(s["MaxIgraca"]),
+                            FK_Proizvodac = Convert.ToInt32(s["FK_proizvodac"]),
+                            Proizvodac = s["NazivProizvodaca"].ToString()
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno čitanje igara iz baze, greška: {ex.Message}");
                 }
 
                 con.Close();

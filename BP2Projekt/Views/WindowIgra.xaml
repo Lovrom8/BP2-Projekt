@@ -6,12 +6,67 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
         mc:Ignorable="d"
-        Title="Nova igra" Height="450" Width="800"
+        Title="Nova igra" Height="350" Width="350"
         Icon="../Resources/esportsIco.png"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
-        >
-    <Grid>
-        
+        Background="{DynamicResource MaterialDesignPaper}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Green.Named.Primary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DialogHost.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Name="igraGrid" Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="27" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="50" />
+        </Grid.ColumnDefinitions>
+
+        <Label Content="Naziv:" Grid.Column="1" Grid.Row="1" />
+        <TextBox Name="tbNaziv" Grid.Column="3" Grid.Row="1" Height="20" 
+                 Text="{Binding Path=Igra.Naziv}"/>
+
+        <Label Content="Zanr:" Grid.Column="1" Grid.Row="3" />
+        <TextBox Name="tbZanr" Grid.Column="3" Grid.Row="3" Height="20" Width="100" HorizontalAlignment="Left"
+                 Text="{Binding Path=Igra.Zanr}"/>
+
+        <Label Content="MaxIgraca:" Grid.Column="1" Grid.Row="5" />
+        <TextBox Name="tbMaxIgaraca" Grid.Column="3" Grid.Row="5" Height="20" Width="30" HorizontalAlignment="Left"
+                 Text="{Binding Path=Igra.MaxIgraca}"/>
+
+        <Label Content="Proizvodac:" Grid.Column="1" Grid.Row="7" />
+        <ComboBox Grid.Column="3" Grid.Row="7" Name="comboTimovi" Height="25"
+                  ItemsSource="{Binding ListaProizvodaci}" SelectedItem="{Binding Proizvodac}" DisplayMemberPath="Naziv" />
+
+        <Button Name="btnDodaj" HorizontalAlignment="Right" Margin="3" MinWidth="80"  Grid.Column="3" Grid.Row="8" Command="{Binding Path=DodajIliOsvjeziCommand}">
+            <TextBlock>Dodaj</TextBlock>
+        </Button>
+
+        <StatusBar Grid.Row="10" HorizontalAlignment="Stretch" Grid.ColumnSpan="5">
+            <StatusBarItem>
+                <TextBlock Name="lblStatus" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </mde:MaterialWindow>

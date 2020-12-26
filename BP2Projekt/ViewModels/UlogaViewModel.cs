@@ -80,14 +80,14 @@ namespace BP2Projekt.ViewModels
                     Uloga.ID_Uloga = ID;
                     Uloga.Naziv = reader["NazivUloge"].ToString();
                     Uloga.ID_Igra = Convert.ToInt32(reader["FK_igra"]);
-                    Uloga.IgraNaziv = reader["Naziv"].ToString();
+                    Uloga.IgraNaziv = reader["NazivIgre"].ToString();
                     
                     Igra.ID_Igra = Uloga.ID_Igra;
                     Igra.Naziv = Uloga.IgraNaziv;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno učitavanje uloge, greška: {ex.Message}");
                 }
 
                 con.Close();
@@ -102,7 +102,7 @@ namespace BP2Projekt.ViewModels
                 {
                     con.Open();
 
-                    var selectSQL = new SQLiteCommand(@"SELECT ID_igra, Naziv FROM Igra", con);
+                    var selectSQL = new SQLiteCommand(@"SELECT ID_igra, NazivIgre FROM Igra", con);
 
                     var reader = selectSQL.ExecuteReader();
 
@@ -126,7 +126,7 @@ namespace BP2Projekt.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Neuspješna promjena timova, greška: {ex.Message}");
+                MessageBox.Show($"Neuspješno učitavanje igara, greška: {ex.Message}");
             }
         }
 
@@ -136,8 +136,17 @@ namespace BP2Projekt.ViewModels
             {
                 con.Open();
 
-                var insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Uloga (ID_uloga, NazivUloge, FK_igra) VALUES (@Id, @Naziv, @FK_igra)", con);
+                //var insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Uloga (ID_uloga, NazivUloge, FK_igra) VALUES (@Id, @Naziv, @FK_igra)", con);
 
+                string insert;
+                SQLiteCommand insertSQL;
+
+                if (Uloga.ID_Uloga == -1)
+                    insert = @"INSERT INTO Uloga (NazivUloge, FK_igra) VALUES (@Naziv, @FK_Igra)";
+                else
+                    insert = @"UPDATE Uloga SET NazivProizvodaca=@Naziv, FK_igra=@FK_Igra WHERE ID_uloga=@Id";
+
+                insertSQL = new SQLiteCommand(insert, con);
                 insertSQL.Parameters.AddWithValue("@Id", Uloga.ID_Uloga);
                 insertSQL.Parameters.AddWithValue("@Naziv", Uloga.Naziv);
                 insertSQL.Parameters.AddWithValue("@FK_Igra", Uloga.ID_Igra);

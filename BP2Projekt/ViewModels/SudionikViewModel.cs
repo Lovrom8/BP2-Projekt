@@ -154,7 +154,7 @@ namespace BP2Projekt.ViewModels
                     {
                         ListaOrganizacije.Add(new OrganizacijaModel()
                         {
-                            ID_org = Convert.ToInt32(s["ID_org"].ToString()),
+                            ID_Organizacija = Convert.ToInt32(s["ID_org"].ToString()),
                             Naziv = s["NazivOrganizacije"].ToString()
                         });
                     }
@@ -201,7 +201,7 @@ namespace BP2Projekt.ViewModels
                     Sudionik.Nick = reader["Nadimak"].ToString();
                     Sudionik.TimNaziv = reader["NazivTima"].ToString();
 
-                    Organizacija = ListaOrganizacije.FirstOrDefault(org => org.ID_org == Convert.ToInt32(reader["ID_org"]));
+                    Organizacija = ListaOrganizacije.FirstOrDefault(org => org.ID_Organizacija == Convert.ToInt32(reader["ID_org"]));
                     Igra = ListaIgre.FirstOrDefault(igra => igra.ID_Igra == Convert.ToInt32(reader["ID_igra"]));
                 }
                 catch (Exception ex)
@@ -225,7 +225,7 @@ namespace BP2Projekt.ViewModels
 
                 var selectSQL = new SQLiteCommand(@"SELECT ID_tim, COUNT(*) FROM Tim WHERE FK_igra=@FK_igra AND FK_organizacija=@FK_org", con); // Provjeri ima li 
                 selectSQL.Parameters.AddWithValue("FK_igra", Igra.ID_Igra);
-                selectSQL.Parameters.AddWithValue("FK_org", Organizacija.ID_org);
+                selectSQL.Parameters.AddWithValue("FK_org", Organizacija.ID_Organizacija);
 
                 try
                 {
@@ -252,7 +252,7 @@ namespace BP2Projekt.ViewModels
 
                     var insertTimSQL = new SQLiteCommand(@"INSERT INTO Tim (Naziv, FK_organizacija, FK_igra) VALUES (@Naziv, @FK_org, @FK_igra)", con);
                     insertTimSQL.Parameters.AddWithValue("@Naziv", Organizacija.Naziv);
-                    insertTimSQL.Parameters.AddWithValue("@FK_org", Organizacija.ID_org);
+                    insertTimSQL.Parameters.AddWithValue("@FK_org", Organizacija.ID_Organizacija);
                     insertTimSQL.Parameters.AddWithValue("@FK_igra", Igra.ID_Igra);
 
                     try

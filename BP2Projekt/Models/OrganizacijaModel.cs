@@ -13,7 +13,7 @@ namespace BP2Projekt.Models
         private string osnovana;
         private string drzava;
 
-        public int ID_org
+        public int ID_Organizacija
         {
             get => id;
             set

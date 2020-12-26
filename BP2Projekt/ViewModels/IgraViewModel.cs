@@ -4,15 +4,16 @@ using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
 {
-    //TODO: zavrsi
     class IgraViewModel : BaseViewModel
     {
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
@@ -48,14 +49,77 @@ namespace BP2Projekt.ViewModels
 
         private void UcitajIgru(int ID_igra)
         {
+            if (ID_igra == -1)
+                return;
 
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                con.Open();
+
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Igra I JOIN Proizvodac P ON P.ID_proizvodac = I.FK_proizvodac WHERE ID_igra=@Id ", con);
+                selectSQL.Parameters.AddWithValue("@Id", ID_igra);
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    if (!reader.HasRows)
+                        return;
+
+                    reader.Read();
+
+                    Igra = new IgraModel()
+                    {
+                        ID_Igra = ID_igra,
+                        Naziv = reader["NazivIgre"].ToString(),
+                        MaxIgraca = Convert.ToInt32(reader["MaxIgraca"]),
+                        Zanr = reader["Zanr"].ToString(),
+                        FK_Proizvodac = Convert.ToInt32(reader["FK_proizvodac"])
+                    };
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno učitavanje uloge, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
         }
 
         private void UcitajProizvodace()
         {
+            try
+            {
+                using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+                {
+                    con.Open();
 
+                    var selectSQL = new SQLiteCommand(@"SELECT ID_proizvodac, NazivProizvodaca FROM Proizvodac", con);
+
+                    var reader = selectSQL.ExecuteReader();
+
+                    if (!reader.HasRows)
+                        return;
+
+                    ListaProizvodaci.Clear();
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        ListaProizvodaci.Add(new ProizvodacModel()
+                        {
+                            ID = Convert.ToInt32(s["ID_proizvodac"].ToString()),
+                            Naziv = s["NazivProizvodaca"].ToString()
+                        });
+                    }
+
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Neuspješno učitavanje proizvodača, greška: {ex.Message}");
+            }
         }
-
 
         private void DodajIliOsvjezi()
         {
@@ -63,21 +127,29 @@ namespace BP2Projekt.ViewModels
             {
                 con.Open();
 
+                string insert;
+                SQLiteCommand insertSQL;
 
-                SQLiteCommand insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Uloga (ID_uloga, NazivUloge, FK_igra) VALUES (@Id, @Naziv, @FK_igra)", con);
+                if (Igra.ID_Igra == -1)
+                    insert = @"INSERT INTO Igra (NazivIgre, FK_proizvodac, Zanr, MaxIgraca) VALUES (@Naziv, @FK_Proizvodac, @Zanr, @MaxIgraca)";
+                else
+                    insert = @"UPDATE Igra SET NazivIgre=@Naziv, Zanr=@Zanr, FK_proizvodac=@FK_Proizvodac, MaxIgraca=@MaxIgraca WHERE ID_igra=@Id";
 
+                insertSQL = new SQLiteCommand(insert, con);
                 insertSQL.Parameters.AddWithValue("@Id", Proizvodac.ID);
-                insertSQL.Parameters.AddWithValue("@Naziv", Uloga.Naziv);
-                insertSQL.Parameters.AddWithValue("@FK_Igra", Uloga.ID_Igra);
+                insertSQL.Parameters.AddWithValue("@Naziv", Igra.Naziv);
+                insertSQL.Parameters.AddWithValue("@FK_Proizvodac", Igra.FK_Proizvodac);
+                insertSQL.Parameters.AddWithValue("@Zanr", Igra.Zanr);
+                insertSQL.Parameters.AddWithValue("@MaxIgraca", Igra.MaxIgraca);
 
                 try
                 {
                     insertSQL.ExecuteNonQuery();
-                    MessageBox.Show("Uloga dodana u bazu!", "Dodano!");
+                    MessageBox.Show("Igra dodana u bazu!", "Dodano!");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno ubacivanje igre u bazu, greška: {ex.Message}");
                 }
 
                 con.Close();

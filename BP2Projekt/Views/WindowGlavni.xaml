@@ -57,11 +57,11 @@
 
                     <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="32" Grid.Row="1">
                         <StackPanel>
-                            <Button ToolTip="Dodaj sudionike" Content="{materialDesign:PackIcon Kind=Github, Size=20}" Command="{Binding OtvoriSudionikeCommand}"/>
+                            <Button ToolTip="Dodaj sudionike" Content="Sud" Command="{Binding OtvoriSudionikeCommand}"/>
 
-                            <Button ToolTip="Dodaj timove" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Content="{materialDesign:PackIcon Kind=Twitter, Size=20}" Command="{Binding OtvoriTimoveCommand}"/>
+                            <Button ToolTip="Dodaj timove" Content="Tim" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Command="{Binding OtvoriTimoveCommand}"/>
 
-                            <Button ToolTip="Dodaj organizatora" Content="{materialDesign:PackIcon Kind=Message, Size=20}"  Command="{Binding OtvoriOrganizatoraCommand}" >
+                            <Button ToolTip="Dodaj organizatora" Content="Meč"  Command="{Binding OtvoriOrganizatoraCommand}" >
                                 <!-- mix up the colours by bringing in a named palette (see merged dictionaries at top) -->
                                 <Button.Background>
                                     <SolidColorBrush Color="{StaticResource GreenPrimary500}"/>
@@ -72,6 +72,12 @@
                                 </Button.Foreground>
                             </Button>
 
+                            <Button ToolTip="Dodaj sudionike" Content="Liga" />
+                            <Button ToolTip="Dodaj sudionike" Content="Orgor" />
+                            <Button ToolTip="Dodaj sudionike" Content="Proiz" />
+                            <Button ToolTip="Dodaj sudionike" Content="Orgzc" />
+                            <Button ToolTip="Dodaj sudionike" Content="Tim" />
+                            <Button ToolTip="Dodaj sudionike" Content="Uloga" />
                             <!--
                             <Button ToolTip="Email" Background="{DynamicResource SecondaryHueMidBrush}" Foreground="{DynamicResource SecondaryHueMidForegroundBrush}" Content="{materialDesign:PackIcon Kind=Email, Size=20}"/>
 
@@ -126,6 +132,21 @@
                         <DataGridTextColumn Binding="{Binding Drzava}" Header="Drzava" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
                         <DataGridTextColumn Binding="{Binding TimNaziv}" Header="Tim" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
                         <DataGridTextColumn Binding="{Binding Aktivan}" Header="Aktivan" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Igre">
+                <DataGrid
+                    ItemsSource="{Binding ListaIgre}"
+                    CanUserAddRows="False"
+                    SelectionUnit="Cell"
+                    SelectionMode="Extended" AutoGenerateColumns="false">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                        <DataGridTextColumn Binding="{Binding Proizvodac}" Header="Proizvodac" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                        <DataGridTextColumn Binding="{Binding Zanr}" Header="Zanr" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                        <DataGridTextColumn Binding="{Binding MaxIgraca}" Header="Broj igraca" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
