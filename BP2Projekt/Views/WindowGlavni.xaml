@@ -57,9 +57,9 @@
 
                     <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="32" Grid.Row="1">
                         <StackPanel>
-                            <Button ToolTip="Dodaj sudionike" Content="Sud" Command="{Binding OtvoriSudionikeCommand}"/>
+                            <Button ToolTip="Dodaj sudionike" Content="Sud" Command="{Binding OtvoriSudionikaCommand}"/>
 
-                            <Button ToolTip="Dodaj timove" Content="Tim" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Command="{Binding OtvoriTimoveCommand}"/>
+                            <Button ToolTip="Dodaj timove" Content="Tim" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Command="{Binding OtvoriTimCommand}"/>
 
                             <Button ToolTip="Dodaj organizatora" Content="Meč"  Command="{Binding OtvoriOrganizatoraCommand}" >
                                 <!-- mix up the colours by bringing in a named palette (see merged dictionaries at top) -->
@@ -72,12 +72,12 @@
                                 </Button.Foreground>
                             </Button>
 
-                            <Button ToolTip="Dodaj ligu" Content="Liga" />
-                            <Button ToolTip="Dodaj organizatora" Content="Orgor" />
-                            <Button ToolTip="Dodaj proizvođača" Content="Proiz" />
+                            <Button ToolTip="Dodaj ligu" Content="Liga" Command="{Binding OtvoriLiguCommand}"/>
+                            <Button ToolTip="Dodaj organizatora" Content="Orgor" Command="{Binding OtvoriOrganizatoraCommand}" />
+                            <Button ToolTip="Dodaj proizvođača" Content="Proiz" Command="{Binding OtvoriProizvodacaCommand}" />
                             <Button ToolTip="Dodaj organizaciju" Content="Orgzc" Command="{Binding OtvoriOrganizacijuCommand}" />
-                            <Button ToolTip="Dodaj tim" Content="Tim" />
-                            <Button ToolTip="Dodaj ulogu" Content="Uloga" />
+                            <Button ToolTip="Dodaj tim" Content="Tim" Command="{Binding OtvoriTimCommand}" />
+                            <Button ToolTip="Dodaj ulogu" Content="Uloga" Command="{Binding OtvoriUloguCommand}" />
                             <!--
                             <Button ToolTip="Email" Background="{DynamicResource SecondaryHueMidBrush}" Foreground="{DynamicResource SecondaryHueMidForegroundBrush}" Content="{materialDesign:PackIcon Kind=Email, Size=20}"/>
 

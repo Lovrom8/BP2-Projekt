@@ -1,8 +1,10 @@
 ﻿using BP2Projekt.Models;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
@@ -16,15 +18,13 @@ namespace BP2Projekt.ViewModels
     {
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;
-        public OrganizatorModel Organizator { get; }
+        public OrganizatorModel Organizator { get; set; }
+        public ObservableCollection<OrganizatorModel> ListaOrganizatora { get; private set; }
+        public int ID_organizatora { get; private set; }
 
-        public OrganizatorViewModel(int ID)
+        public OrganizatorViewModel()
         {
             _dodajIliOsvjeziCommand = new DelegateCommand(DodajIliOsvjezi);
-            Organizator = new OrganizatorModel();
-            Organizator.ID_Organizator = ID;
-
-            UcitajOrganizatora(ID);
         }
 
         private void UcitajOrganizatora(int ID)
@@ -47,10 +47,14 @@ namespace BP2Projekt.ViewModels
                         return;
 
                     reader.Read();
-                    Organizator.ID_Organizator = ID;
-                    Organizator.Naziv = reader["NazivOrganizatora"].ToString();
-                    Organizator.Drzava = reader["Drzava"].ToString();
-                    Organizator.Osnovan = reader["Osnovan"].ToString();
+
+                    Organizator = new OrganizatorModel()
+                    {
+                        ID_Organizator = ID,
+                        Naziv = reader["Naziva"].ToString(),
+                        Drzava = reader["Drzava"].ToString(),
+                        Osnovan = reader["Osnovan"].ToString(),
+                    };
                 }
                 catch (Exception ex)
                 {
@@ -95,6 +99,14 @@ namespace BP2Projekt.ViewModels
 
                 con.Close();
             }
+        }
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
+            ListaOrganizatora = parameters.GetValue<ObservableCollection<OrganizatorModel>>("listaOrganizatora");
+            ID_organizatora = parameters.GetValue<int>("idOrganizator");
+
+            UcitajOrganizatora(ID_organizatora);
         }
     }
 }

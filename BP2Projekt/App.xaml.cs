@@ -25,7 +25,7 @@ namespace BP2Projekt
             containerRegistry.RegisterDialog<WindowProizvodac, ProizvodacViewModel>("ProizvodacProzor");
             containerRegistry.RegisterDialog<WindowSudionik, SudionikViewModel>("SudionikProzor");
             containerRegistry.RegisterDialog<WindowTim, TimViewModel>("TimProzor");
-
+            containerRegistry.RegisterDialog<WindowUloga, UlogaViewModel>("UlogaProzor");
         }
     }
 }

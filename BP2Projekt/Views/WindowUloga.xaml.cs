@@ -16,18 +16,11 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    /// <summary>
-    /// Interaction logic for WindowUloga.xaml
-    /// </summary>
-    public partial class WindowUloga : MaterialWindow
+    public partial class WindowUloga
     {
         public WindowUloga()
         {
             InitializeComponent();
-
-            int ID = 10;
-            var _uvm = new UlogaViewModel(ID);
-            DataContext = _uvm;
         }
     }
 }

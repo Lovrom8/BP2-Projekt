@@ -1,6 +1,7 @@
 ﻿using BP2Projekt.Models;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,17 +45,14 @@ namespace BP2Projekt.ViewModels
             }
         }
 
-        public UlogaViewModel(int UlogaID)
+        public ObservableCollection<UlogaModel> ListaUloga { get; private set; }
+        public int ID_uloga { get; private set; }
+
+        public UlogaViewModel()
         {
             _dodajIliOsvjeziCommand = new DelegateCommand(DodajIliOsvjezi);
-            Uloga = new UlogaModel();
-            Uloga.ID_Uloga = UlogaID;
-            Igra = new IgraModel();
+        
 
-            ListaIgre = new ObservableCollection<IgraModel>();
-
-            UcitajUlogu(UlogaID);
-            UcitajIgre();
         }
 
         private void UcitajUlogu(int ID)
@@ -136,8 +134,6 @@ namespace BP2Projekt.ViewModels
             {
                 con.Open();
 
-                //var insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Uloga (ID_uloga, NazivUloge, FK_igra) VALUES (@Id, @Naziv, @FK_igra)", con);
-
                 string insert;
                 SQLiteCommand insertSQL;
 
@@ -163,6 +159,20 @@ namespace BP2Projekt.ViewModels
 
                 con.Close();
             }
+        }
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
+            ListaUloga = parameters.GetValue<ObservableCollection<UlogaModel>>("listaUloga");
+            ID_uloga = parameters.GetValue<int>("idUloga");
+
+            ListaIgre = new ObservableCollection<IgraModel>();
+            Uloga = new UlogaModel();
+            Uloga.ID_Uloga = ID_uloga;
+            Igra = new IgraModel();
+            
+            UcitajIgre();
+            UcitajUlogu(ID_uloga);
         }
     }
 }

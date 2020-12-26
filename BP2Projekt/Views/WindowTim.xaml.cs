@@ -17,15 +17,11 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    public partial class WindowTim : MaterialWindow
+    public partial class WindowTim
     {
         public WindowTim()
         {
             InitializeComponent();
-
-            int id = 2;
-            var _tvm = new TimViewModel(id);
-            DataContext = _tvm;
         }
     }
 }

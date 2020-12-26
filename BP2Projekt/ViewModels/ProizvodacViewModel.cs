@@ -1,8 +1,10 @@
 ﻿using BP2Projekt.Models;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
@@ -17,13 +19,12 @@ namespace BP2Projekt.ViewModels
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;
         public ProizvodacModel Proizvodac { get; set; }
+        public ObservableCollection<ProizvodacModel> ListaProizvodaca { get; private set; }
+        public int ID_Proizvodac { get; private set; }
 
-        public ProizvodacViewModel(int ID_proizvodac)
+        public ProizvodacViewModel()
         {
             _dodajIliOsvjeziCommand = new DelegateCommand(DodajIliOsvjezi);
-            Proizvodac = new ProizvodacModel() { ID = -1 };
-        
-            UcitajProizvodaca(ID_proizvodac);
         }
 
         private void UcitajProizvodaca(int ID_proizvodac)
@@ -94,6 +95,16 @@ namespace BP2Projekt.ViewModels
 
                 con.Close();
             }
+        }
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
+            ListaProizvodaca = parameters.GetValue<ObservableCollection<ProizvodacModel>>("listaProizvodaca");
+            ID_Proizvodac = parameters.GetValue<int>("idProizvodac");
+
+            Proizvodac = new ProizvodacModel() { ID = -1 };
+            
+            UcitajProizvodaca(ID_Proizvodac);
         }
     }
 }

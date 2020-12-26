@@ -17,10 +17,6 @@ namespace BP2Projekt
         public WindowOrganizacija()
         {
             InitializeComponent();
-
-            //int ID = 2;
-            //var _ovm = new OrganizacijaViewModel(ID);
-            //DataContext = _ovm;
         }
     }
 }

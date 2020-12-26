@@ -16,18 +16,11 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    /// <summary>
-    /// Interaction logic for WindowIgra.xaml
-    /// </summary>
-    public partial class WindowIgra : MaterialWindow
+    public partial class WindowIgra 
     {
         public WindowIgra()
         {
             InitializeComponent();
-
-            int ID = -1;
-            var _ivm = new IgraViewModel(ID);
-            DataContext = _ivm;
         }
     }
 }

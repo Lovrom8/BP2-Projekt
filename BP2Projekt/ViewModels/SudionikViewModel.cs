@@ -2,6 +2,7 @@
 using BP2Projekt.Models;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,7 +41,7 @@ namespace BP2Projekt.ViewModels
         }
         public IgracTrenerRadioModel RadioModel { get; set; }
 
-        public SudionikViewModel(SudionikModel sudionici)
+        public SudionikViewModel()
         {
             _dodajSudionikaCmd = new DelegateCommand(DodajSudionika);
             Sudionik = new SudionikModel();
@@ -51,12 +52,6 @@ namespace BP2Projekt.ViewModels
             ListaOrganizacije = new ObservableCollection<OrganizacijaModel>();
             ListaUloge = new ObservableCollection<UlogaModel>();
             ListaIgre = new ObservableCollection<IgraModel>();
-
-            sudionici.Nick = "lel2";
-
-            PopuniOrganizacije();
-            PopuniIgre();
-           // PopuniInfo(nick);
         }
 
         private void PopuniIgre()
@@ -295,6 +290,13 @@ namespace BP2Projekt.ViewModels
                 }
                 con.Close();
             }
+        }
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
+            PopuniOrganizacije();
+            PopuniIgre();
+            // PopuniInfo(nick);
         }
     }
 }

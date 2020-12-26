@@ -1,6 +1,7 @@
 ﻿using BP2Projekt.Models;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,7 +33,7 @@ namespace BP2Projekt.ViewModels
                 organizator = value;
                 Liga.FK_Organizator = value.ID_Organizator;
                 Liga.Organizator = value.Naziv;
-                OnPropertyChanged("Organizator");
+                //OnPropertyChanged("Organizator");
             }
         }
 
@@ -44,26 +45,18 @@ namespace BP2Projekt.ViewModels
                 igra = value;
                 Liga.FK_Igra = value.ID_Igra;
                 Liga.Igra = value.Naziv;
-                OnPropertyChanged("Igra");
+                //OnPropertyChanged("Igra");
             }
         }
 
         public ObservableCollection<OrganizatorModel> ListaOrganizatori { get; set; }
         public ObservableCollection<IgraModel> ListaIgre { get; set; }
+        public ObservableCollection<LigaModel> ListaLiga { get; set; }
+        public int ID_Liga { get; set; }
 
-        public LigaViewModel(int LigaID)
+        public LigaViewModel()
         {
             _dodajIliOsvjeziCommand = new DelegateCommand(DodajIliOsvjezi);
-            Igra = new IgraModel();
-            Igra.ID_Igra = LigaID;
-            Organizator = new OrganizatorModel();
-
-            ListaIgre = new ObservableCollection<IgraModel>();
-            ListaOrganizatori = new ObservableCollection<OrganizatorModel>();
-
-            UcitajLigu(LigaID);
-            UcitajOrganizatore();
-            UcitajIgre();
         }
 
         private void UcitajLigu(int LigaID)
@@ -219,6 +212,23 @@ namespace BP2Projekt.ViewModels
 
                 con.Close();
             }
+        }
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
+            ListaLiga = parameters.GetValue<ObservableCollection<LigaModel>>("listaLiga");
+            ID_Liga = parameters.GetValue<int>("idLiga");
+
+            Igra = new IgraModel();
+            Igra.ID_Igra = ID_Liga;
+            Organizator = new OrganizatorModel();
+
+            ListaIgre = new ObservableCollection<IgraModel>();
+            ListaOrganizatori = new ObservableCollection<OrganizatorModel>();
+
+            UcitajLigu(ID_Liga);
+            UcitajOrganizatore();
+            UcitajIgre();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BP2Projekt.Models;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,15 +26,15 @@ namespace BP2Projekt.ViewModels
         public IgracModel OdabraniIgrac { get; set; }
         public ObservableCollection<IgracModel> ListaIgraci { get; set; }
         public ObservableCollection<IgracModel> OstaliIgraci { get; set; }
+        public ObservableCollection<OrganizatorModel> ListaTimova { get; private set; }
+        public int ID_tim { get; private set; }
 
-        public TimViewModel(int TimID)
+        public TimViewModel()
         {
             _dodajIgracaCmd = new DelegateCommand(DodajIgraca);
             _obirisiIgracaCmd = new DelegateCommand(ObrisiIgraca);
 
             OstaliIgraci = new ObservableCollection<IgracModel>();
-
-            PopuniListuIgraca(TimID);
         }
 
         private void PopuniListuIgraca(int TimID)
@@ -63,7 +64,7 @@ namespace BP2Projekt.ViewModels
                             ID_Sudionik = Convert.ToInt32(s["ID_igrac"].ToString()),
                             Nick = s["Nick"].ToString(),
                             Drzava = s["Drzava"].ToString(),
-                            UlogaNaziv = s["Naziv"].ToString(),
+                            UlogaNaziv = s["NazivUloge"].ToString(),
                             ID_Uloga = Convert.ToInt32(s["FK_uloga"].ToString())
                         });
                     }
@@ -136,6 +137,14 @@ namespace BP2Projekt.ViewModels
 
                 con.Close();
             }
+        }
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
+            ListaTimova = parameters.GetValue<ObservableCollection<OrganizatorModel>>("listaTimova");
+            ID_tim = parameters.GetValue<int>("idTim");
+
+            PopuniListuIgraca(ID_tim);
         }
     }
 }

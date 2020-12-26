@@ -15,10 +15,7 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    /// <summary>
-    /// Interaction logic for WindowProizvodac.xaml
-    /// </summary>
-    public partial class WindowProizvodac : MaterialWindow
+    public partial class WindowProizvodac
     {
         public WindowProizvodac()
         {

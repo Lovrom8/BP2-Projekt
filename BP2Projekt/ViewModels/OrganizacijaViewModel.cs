@@ -20,9 +20,6 @@ namespace BP2Projekt
     {
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
 
-        public event Action<IDialogResult> RequestClose;
-        public DelegateCommand CloseDialogCommand { get; set; }
-
         private ObservableCollection<OrganizacijaModel> _listaOrganizacija;
 
         public ObservableCollection<OrganizacijaModel> ListaOrganizacija
@@ -45,8 +42,6 @@ namespace BP2Projekt
         {
             _dodajIliOsvjeziCommand = new DelegateCommand(DodajIliOsvjezi);
             Organizacija = new OrganizacijaModel();
-
-            CloseDialogCommand = new DelegateCommand(() => RequestClose(null));
         }
 
         private void UcitajOrganizaciju(int ID)
@@ -120,18 +115,12 @@ namespace BP2Projekt
             }
         }
 
-        public override bool CanCloseDialog() => true;
-
-        public override void OnDialogClosed() => Console.WriteLine("Gasim prozor Organizacija...");
-
         public override void OnDialogOpened(IDialogParameters parameters)
         {
             ListaOrganizacija = parameters.GetValue<ObservableCollection<OrganizacijaModel>>("listaOrganizacija");
             ID_Org = parameters.GetValue<int>("idOrg");
 
             UcitajOrganizaciju(ID_Org);
-
-            ListaOrganizacija.FirstOrDefault(r => r.ID_Organizacija == 1).Naziv = "gejorg";
         }
     }
 }

@@ -16,15 +16,11 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    public partial class WindowMec : MaterialWindow
+    public partial class WindowMec
     {
         public WindowMec()
         {
             InitializeComponent();
-
-            int mecID = 3;
-            var _mvm = new MecViewModel(mecID);
-            DataContext = _mvm;
         }
     }
 }

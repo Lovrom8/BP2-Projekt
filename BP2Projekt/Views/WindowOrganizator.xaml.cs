@@ -17,15 +17,11 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    public partial class WindowOrganizator : MaterialWindow
+    public partial class WindowOrganizator
     {
         public WindowOrganizator()
         {
             InitializeComponent();
-
-            int ID = -1;
-            var _ovm = new OrganizatorViewModel(ID);
-            DataContext = _ovm;
         }
     }
 }

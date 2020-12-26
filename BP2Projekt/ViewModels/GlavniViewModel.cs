@@ -20,15 +20,25 @@ namespace BP2Projekt.ViewModels
 {
     class GlavniViewModel : BindableBase
     {
-        private readonly DelegateCommand _otvoriSudionikeCmd;
+        private readonly DelegateCommand _otvoriSudionikaCmd;
         private readonly DelegateCommand _otvoriTimoveCmd;
         private readonly DelegateCommand _otvoriOrganizatoraCmd;
         private readonly DelegateCommand _otvoriOrganizacijuCmd;
+        private readonly DelegateCommand _otvoriLiguCmd;
+        private readonly DelegateCommand _otvoriProizvodacaCmd;
+        private readonly DelegateCommand _otvoriUloguCmd;
+        private readonly DelegateCommand _otvoriMecCmd;
+        private readonly DelegateCommand _otvoriIgruCmd;
 
-        public ICommand OtvoriSudionikeCommand => _otvoriSudionikeCmd;
-        public ICommand OtvoriTimoveCommand => _otvoriTimoveCmd;
+        public ICommand OtvoriSudionikaCommand => _otvoriSudionikaCmd;
+        public ICommand OtvoriTimCommand => _otvoriTimoveCmd;
         public ICommand OtvoriOrganizatoraCommand => _otvoriOrganizatoraCmd;
         public ICommand OtvoriOrganizacijuCommand => _otvoriOrganizacijuCmd;
+        public ICommand OtvoriLiguCommand => _otvoriLiguCmd;
+        public ICommand OtvoriProizvodacaCommand => _otvoriProizvodacaCmd;
+        public ICommand OtvoriUloguCommand => _otvoriUloguCmd;
+        public ICommand OtvoriMecCommand => _otvoriMecCmd;
+        public ICommand OtvoriIgruCommand => _otvoriIgruCmd;
 
         public ObservableCollection<MecModel> ListaMecevi { get; set; }
         public ObservableCollection<LigaModel> ListaLige { get; set; }
@@ -36,48 +46,74 @@ namespace BP2Projekt.ViewModels
         public ObservableCollection<IgraModel> ListaIgre { get; set; }
         public ObservableCollection<TimModel> ListaTimovi { get; set; }
         public ObservableCollection<OrganizacijaModel> ListaOrganizacije { get; set; }
+        public ObservableCollection<OrganizatorModel> ListaOrganizatora { get; set; }
+        public ObservableCollection<UlogaModel> ListaUloga { get; set; }
+        public ObservableCollection<ProizvodacModel> ListaProizvodaca { get; set; }
 
         private IDialogService _dialogService { get; }
 
         public GlavniViewModel(IDialogService dialogService)
         {
-            _otvoriSudionikeCmd = new DelegateCommand(OtvoriSudionike);
-            _otvoriTimoveCmd = new DelegateCommand(OtvoriIgrace);
+            _otvoriSudionikaCmd = new DelegateCommand(OtvoriSudionika);
+            _otvoriTimoveCmd = new DelegateCommand(OtvoriTim);
             _otvoriOrganizatoraCmd = new DelegateCommand(OtvoriOrganizatora);
             _otvoriOrganizacijuCmd = new DelegateCommand(OtvoriOrganizaciju);
+            _otvoriLiguCmd = new DelegateCommand(OtvoriLigu);
+            _otvoriIgruCmd = new DelegateCommand(OtvoriIgru);
+            _otvoriUloguCmd = new DelegateCommand(OtvoriUlogu);
+            _otvoriMecCmd = new DelegateCommand(OtvoriMec);
+            _otvoriProizvodacaCmd = new DelegateCommand(OtvoriProizvodaca);
 
             ListaMecevi = new ObservableCollection<MecModel>();
             ListaLige = new ObservableCollection<LigaModel>();
             ListaSudionici = new ObservableCollection<SudionikModel>();
             ListaIgre = new ObservableCollection<IgraModel>();
             ListaOrganizacije = new ObservableCollection<OrganizacijaModel>();
+            ListaTimovi = new ObservableCollection<TimModel>();
+            ListaOrganizatora = new ObservableCollection<OrganizatorModel>();
+            ListaUloga = new ObservableCollection<UlogaModel>();
+            ListaProizvodaca = new ObservableCollection<ProizvodacModel>();
 
             PopuniMečeve();
             PopuniLige();
             PopuniSudionike();
             PopuniIgre();
             PopuniOrganizacije();
+            PopuniOrganizatore();
+            PopuniUloge();
+            PopuniProizvodaca();
+            PopuniTimove();
 
             _dialogService = dialogService;
         }
 
-        private void OtvoriSudionike()
+        private void OtvoriSudionika() => OtvoriSudionike(-1);
+        private void OtvoriOrganizatora() => OtvoriOrganizatore(-1);
+        private void OtvoriOrganizaciju() => OtvoriOrganizacije(-1);
+        private void OtvoriLigu() => OtvoriLige(-1);
+        private void OtvoriIgru() => OtvoriIgre(-1);
+        private void OtvoriUlogu() => OtvoriUloge(-1);
+        private void OtvoriMec() => OtvoriMeceve(-1);
+        private void OtvoriProizvodaca() => OtvoriProizvodace(-1);
+        private void OtvoriTim() => OtvoriTimove(-1);
+
+        private void OtvoriTimove(int timID)
         {
-            //ProzorManager.Prikazi("ProzorSudionici");
-
-            SudionikModel noviSudionik = new SudionikModel();
-            var childWindow = new WindowSudionik();
-            var childWindowViewModel = new SudionikViewModel(noviSudionik);
-            childWindow.DataContext = childWindowViewModel;
-            childWindow.Show();
-
-            int x = 0;
+            _dialogService.ShowDialog("TimProzor", new DialogParameters
+            {
+                { "listaTimovi", ListaTimovi},
+                { "idTim", timID}
+            }, r => { });
         }
 
-        private void OtvoriIgrace() => ProzorManager.Prikazi("ProzorTim");
-        private void OtvoriOrganizatora() => ProzorManager.Prikazi("ProzorOrganizator");
-
-        private void OtvoriOrganizaciju() => OtvoriOrganizacije(-1);
+        private void OtvoriLige(int ligaID)
+        {
+            _dialogService.ShowDialog("LigaProzor", new DialogParameters
+            {
+                { "listaLiga", ListaLige},
+                { "idLiga", ligaID}
+            }, r => { });
+        }
 
         private void OtvoriOrganizacije(int orgID)
         {
@@ -88,11 +124,65 @@ namespace BP2Projekt.ViewModels
             }, r => { });
         }
 
+        private void OtvoriSudionike(int sudionikID)
+        {
+            _dialogService.ShowDialog("SudionikProzor", new DialogParameters
+            {
+                { "listaSudionik", ListaSudionici},
+                { "idSudionik", sudionikID}
+            }, r => { });
+        }
+
+        private void OtvoriOrganizatore(int organizatorID)
+        {
+            _dialogService.ShowDialog("OrganizatorProzor", new DialogParameters
+            {
+                { "listaOrganizator", ListaOrganizatora},
+                { "idOrganizator", organizatorID}
+            }, r => { });
+        }
+
+        private void OtvoriIgre(int igraID)
+        {
+            _dialogService.ShowDialog("IgraProzor", new DialogParameters
+            {
+                { "listaIgara", ListaIgre},
+                { "idIgra", igraID}
+            }, r => { });
+        }
+
+        private void OtvoriProizvodace(int proizvodacID)
+        {
+            _dialogService.ShowDialog("ProizvodacProzor", new DialogParameters
+            {
+                { "listaProizvodaca", ListaProizvodaca},
+                { "idProizvodac", proizvodacID}
+            }, r => { });
+        }
+            
+        private void OtvoriUloge(int ulogaID)
+        {
+            _dialogService.ShowDialog("UlogaProzor", new DialogParameters
+            {
+                { "listaUloga", ListaUloga},
+                { "idUloga", ulogaID}
+            }, r => { });
+        }
+
+        private void OtvoriMeceve(int mecID)
+        {
+            _dialogService.ShowDialog("MecProzor", new DialogParameters
+            {
+                { "listaMeceva", ListaMecevi},
+                { "idMec", mecID}
+            }, r => { });
+        }
+
         private void PopuniMečeve()
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT M.*, T1.Naziv AS T1_Naziv, T2.Naziv AS T2_Naziv FROM Mec M
+                var selectSQL = new SQLiteCommand(@"SELECT M.*, T1.NazivTima AS T1_Naziv, T2.NazivTima AS T2_Naziv FROM Mec M
                                                     JOIN Tim AS T1 ON T1.ID_tim = M.FK_TimA
                                                     JOIN Tim AS T2 ON T2.ID_tim = M.FK_TimB", con);
 
@@ -156,7 +246,6 @@ namespace BP2Projekt.ViewModels
 
                     if (!reader.HasRows)
                         return;
-                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
 
                     ListaLige.Clear();
 
@@ -184,7 +273,7 @@ namespace BP2Projekt.ViewModels
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT S.*, T.Naziv AS NazivTima, U.NazivUloge FROM Sudionik S 
+                var selectSQL = new SQLiteCommand(@"SELECT S.*, T.NazivTima AS NazivTima, U.NazivUloge FROM Sudionik S 
                                                     LEFT OUTER JOIN Uloga U ON U.ID_uloga = (SELECT FK_uloga FROM Igrac WHERE FK_sudionik = S.ID_sudionik)
                                                     JOIN Tim T ON T.ID_tim = S.FK_Tim
                                                     ", con);
@@ -300,6 +389,151 @@ namespace BP2Projekt.ViewModels
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Neuspješno čitanje organizacija iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void PopuniOrganizatore()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Organizator", con);
+
+                con.Open();
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    if (!reader.HasRows)
+                        return;
+
+                    ListaOrganizatora.Clear();
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        ListaOrganizatora.Add(new OrganizatorModel()
+                        {
+                            ID_Organizator = Convert.ToInt32(s["ID_organizator"]),
+                            Osnovan = s["Osnovan"].ToString(),
+                            Naziv = s["NazivOrganizatora"].ToString(),
+                            Drzava = s["Drzava"].ToString()
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno čitanje organizatora iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+        
+        private void PopuniUloge()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Uloga U JOIN Igra I ON U.FK_igra = I.ID_igra", con);
+
+                con.Open();
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    if (!reader.HasRows)
+                        return;
+
+                    ListaUloga.Clear();
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        ListaUloga.Add(new UlogaModel()
+                        {
+                            ID_Uloga = Convert.ToInt32(s["ID_uloga"]),
+                            Naziv = s["NazivUloge"].ToString(),
+                            IgraNaziv = s["NazivIgre"].ToString()
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno čitanje uloga iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void PopuniProizvodaca()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Proizvodac", con);
+
+                con.Open();
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    if (!reader.HasRows)
+                        return;
+
+                    ListaProizvodaca.Clear();
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        ListaProizvodaca.Add(new ProizvodacModel()
+                        {
+                            ID = Convert.ToInt32(s["ID_proizvodac"]),
+                            Naziv = s["NazivProizvodaca"].ToString(),
+                            Drzava = s["Drzava"].ToString()
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno čitanje proizvođača iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void PopuniTimove()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Tim", con);
+
+                con.Open();
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    if (!reader.HasRows)
+                        return;
+
+                    ListaTimovi.Clear();
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        ListaTimovi.Add(new TimModel()
+                        {
+                            ID_Tim = Convert.ToInt32(s["ID_tim"]),
+                            Naziv = s["NazivTima"].ToString()
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno čitanje timova iz baze, greška: {ex.Message}");
                 }
 
                 con.Close();

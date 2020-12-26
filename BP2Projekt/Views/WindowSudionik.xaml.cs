@@ -17,15 +17,11 @@ using System.Windows.Shapes;
 
 namespace BP2Projekt
 {
-    public partial class WindowSudionik : MaterialWindow
+    public partial class WindowSudionik 
     {
         public WindowSudionik()
         {
             InitializeComponent();
-
-            //var _svm = new SudionikViewModel("ropz");
-            //DataContext = _svm;
-            
         }
     }
 }

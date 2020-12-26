@@ -2,6 +2,7 @@
 using BP2Projekt.Models;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,7 +36,7 @@ namespace BP2Projekt.ViewModels
             {
                 _timA = value;
                 TimA.Igraci = new ObservableCollection<IgracModel>(IzvadiIgrace(value.ID_Tim));
-                OnPropertyChanged("TimA");
+                //OnPropertyChanged("TimA");
             }
         }
         public TimModel TimB
@@ -45,20 +46,16 @@ namespace BP2Projekt.ViewModels
             {
                 _timB = value;
                 TimB.Igraci = new ObservableCollection<IgracModel>(IzvadiIgrace(value.ID_Tim));
-                OnPropertyChanged("TimB");
+                //OnPropertyChanged("TimB");
             }
         }
 
         public ObservableCollection<TimModel> ListaTimovi { get; set; } // PAZI: mora biti property!
 
-        public MecViewModel(int MecID)
+        public MecViewModel()
         {
             _promjeniTimoveCommand = new DelegateCommand(PromjeniTimove);
             _spremiPromjene = new DelegateCommand(SpremiPromjene);
-
-            ListaTimovi = new ObservableCollection<TimModel>();
-
-            PopuniInfo(MecID);
         }
 
         private void PopuniInfo(int MecID)
@@ -125,9 +122,12 @@ namespace BP2Projekt.ViewModels
             set
             {
                 _vidljivost = value;
-                OnPropertyChanged("Vidljivost");
+               // OnPropertyChanged("Vidljivost");
             }
         }
+
+        public ObservableCollection<OrganizacijaModel> ListaMecevi { get; private set; }
+        public int ID_Mec { get; private set; }
 
         private ObservableCollection<IgracModel> IzvadiIgrace(int timID)
         {
@@ -237,6 +237,16 @@ namespace BP2Projekt.ViewModels
             }
 
             Vidljivost = Visibility.Collapsed;
+        }
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
+            ListaMecevi = parameters.GetValue<ObservableCollection<OrganizacijaModel>>("listaMec");
+            ID_Mec = parameters.GetValue<int>("idMec");
+
+            ListaTimovi = new ObservableCollection<TimModel>();
+
+            PopuniInfo(ID_Mec);
         }
     }
 }

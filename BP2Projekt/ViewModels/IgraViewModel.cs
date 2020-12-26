@@ -1,6 +1,7 @@
 ﻿using BP2Projekt.Models;
 using MvvmHelpers;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,6 +36,8 @@ namespace BP2Projekt.ViewModels
         }
 
         public ObservableCollection<ProizvodacModel> ListaProizvodaci { get; set; }
+        public ObservableCollection<IgraModel> ListaIgara { get; private set; }
+        public int ID_Igra { get; private set; }
 
         public IgraViewModel(int ID_igra)
         {
@@ -154,6 +157,14 @@ namespace BP2Projekt.ViewModels
 
                 con.Close();
             }
+        }
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
+            ListaIgara = parameters.GetValue<ObservableCollection<IgraModel>>("listaIgara");
+            ID_Igra = parameters.GetValue<int>("idIgra");
+
+            UcitajIgru(ID_Igra);
         }
     }
 }
