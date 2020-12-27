@@ -20,6 +20,15 @@ namespace BP2Projekt.ViewModels
 {
     class GlavniViewModel : BindableBase
     {
+        private IDialogService _dialogService { get; }
+
+        private int _odabraniTab;
+        public int OdabraniTab
+        {
+            get => _odabraniTab;
+            set => SetProperty(ref _odabraniTab, value);
+        }
+
         private readonly DelegateCommand _otvoriSudionikaCmd;
         private readonly DelegateCommand _otvoriTimoveCmd;
         private readonly DelegateCommand _otvoriOrganizatoraCmd;
@@ -45,12 +54,34 @@ namespace BP2Projekt.ViewModels
         public ObservableCollection<SudionikModel> ListaSudionici { get; set; }
         public ObservableCollection<IgraModel> ListaIgre { get; set; }
         public ObservableCollection<TimModel> ListaTimovi { get; set; }
-        public ObservableCollection<OrganizacijaModel> ListaOrganizacije { get; set; }
+        public ObservableCollection<OrganizacijaModel> ListaOrganizacija { get; set; }
         public ObservableCollection<OrganizatorModel> ListaOrganizatora { get; set; }
         public ObservableCollection<UlogaModel> ListaUloga { get; set; }
         public ObservableCollection<ProizvodacModel> ListaProizvodaca { get; set; }
 
-        private IDialogService _dialogService { get; }
+        private MecModel odabraniMec;
+        public MecModel OdabraniMec
+        {
+            get => odabraniMec; 
+            set
+            {
+                SetProperty(ref odabraniMec, value);
+            }
+        }
+
+        public LigaModel OdabranaLiga { get; set; }
+        public SudionikModel OdabraniSudionik { get; set; }
+        public IgraModel OdabranaIgra { get; set; }
+        public TimModel OdabraniTim { get; set; }
+        public OrganizacijaModel OdabranaOrganizacija { get; set; }
+        public OrganizatorModel OdabraniOrganizator { get; set; }
+        public UlogaModel OdabranaUloga { get; set; }
+        public ProizvodacModel OdabraniProizvodac { get; set; }
+
+        private DelegateCommand _urediCmd;
+        private DelegateCommand _obrisiCmd;
+        public ICommand UrediCommand => _urediCmd;
+        public ICommand ObrisiCommand => _obrisiCmd;
 
         public GlavniViewModel(IDialogService dialogService)
         {
@@ -68,7 +99,7 @@ namespace BP2Projekt.ViewModels
             ListaLige = new ObservableCollection<LigaModel>();
             ListaSudionici = new ObservableCollection<SudionikModel>();
             ListaIgre = new ObservableCollection<IgraModel>();
-            ListaOrganizacije = new ObservableCollection<OrganizacijaModel>();
+            ListaOrganizacija = new ObservableCollection<OrganizacijaModel>();
             ListaTimovi = new ObservableCollection<TimModel>();
             ListaOrganizatora = new ObservableCollection<OrganizatorModel>();
             ListaUloga = new ObservableCollection<UlogaModel>();
@@ -85,6 +116,43 @@ namespace BP2Projekt.ViewModels
             PopuniTimove();
 
             _dialogService = dialogService;
+            _obrisiCmd = new DelegateCommand(ObrisiRedak);
+            _urediCmd = new DelegateCommand(UrediTablicu);
+        }
+
+        #region Otvaranje prozorčića
+        private void UrediTablicu()
+        {
+            switch (OdabraniTab)
+            {
+                case 0:
+                    OtvoriMeceve(OdabraniMec.ID_Mec);
+                    break;
+                case 1:
+                    OtvoriLige(OdabranaLiga.ID_Liga);
+                    break;
+                case 2:
+                    OtvoriSudionike(OdabraniSudionik.ID_Sudionik);
+                    break;
+                case 3:
+                    OtvoriIgre(OdabranaIgra.ID_Igra);
+                    break;
+                case 4:
+                    OtvoriOrganizacije(OdabranaOrganizacija.ID_Organizacija);
+                    break;
+                case 5:
+                    OtvoriOrganizatore(OdabraniOrganizator.ID_Organizator);
+                    break;
+                case 6:
+                    OtvoriProizvodace(OdabraniProizvodac.ID_Proizvodac);
+                    break;
+                case 7:
+                    OtvoriTimove(OdabraniTim.ID_Tim);
+                    break;
+                case 8:
+                    OtvoriUloge(OdabranaUloga.ID_Uloga);
+                    break; ;
+            }
         }
 
         private void OtvoriSudionika() => OtvoriSudionike(-1);
@@ -119,7 +187,7 @@ namespace BP2Projekt.ViewModels
         {
             _dialogService.ShowDialog("OrganizacijaProzor", new DialogParameters
             {
-                { "listaOrganizacija", ListaOrganizacije},
+                { "listaOrganizacija", ListaOrganizacija},
                 { "idOrg", orgID}
             }, r => { });
         }
@@ -159,7 +227,7 @@ namespace BP2Projekt.ViewModels
                 { "idProizvodac", proizvodacID}
             }, r => { });
         }
-            
+
         private void OtvoriUloge(int ulogaID)
         {
             _dialogService.ShowDialog("UlogaProzor", new DialogParameters
@@ -177,7 +245,8 @@ namespace BP2Projekt.ViewModels
                 { "idMec", mecID}
             }, r => { });
         }
-
+        #endregion
+        #region Popunjavanje podataka
         private void PopuniMečeve()
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
@@ -253,7 +322,7 @@ namespace BP2Projekt.ViewModels
                     {
                         ListaLige.Add(new LigaModel()
                         {
-                            ID = Convert.ToInt32(s["ID_liga"].ToString()),
+                            ID_Liga = Convert.ToInt32(s["ID_liga"].ToString()),
                             Naziv = s["NazivLige"].ToString(),
                             FK_Organizator = Convert.ToInt32(s["FK_organizator"].ToString()),
                             Organizator = s["OrganizatorNaziv"].ToString()
@@ -375,11 +444,11 @@ namespace BP2Projekt.ViewModels
                     if (!reader.HasRows)
                         return;
 
-                    ListaOrganizacije.Clear();
+                    ListaOrganizacija.Clear();
 
                     foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
                     {
-                        ListaOrganizacije.Add(new OrganizacijaModel()
+                        ListaOrganizacija.Add(new OrganizacijaModel()
                         {
                             ID_Organizacija = Convert.ToInt32(s["ID_org"]),
                             Naziv = s["NazivOrganizacije"].ToString()
@@ -431,7 +500,7 @@ namespace BP2Projekt.ViewModels
                 con.Close();
             }
         }
-        
+
         private void PopuniUloge()
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
@@ -490,7 +559,7 @@ namespace BP2Projekt.ViewModels
                     {
                         ListaProizvodaca.Add(new ProizvodacModel()
                         {
-                            ID = Convert.ToInt32(s["ID_proizvodac"]),
+                            ID_Proizvodac = Convert.ToInt32(s["ID_proizvodac"]),
                             Naziv = s["NazivProizvodaca"].ToString(),
                             Drzava = s["Drzava"].ToString()
                         });
@@ -539,5 +608,244 @@ namespace BP2Projekt.ViewModels
                 con.Close();
             }
         }
+        #endregion
+
+        #region Brisanje
+        private void ObrisiRedak()
+        {
+            switch (OdabraniTab)
+            {
+                case 0:
+                    ObrisiOdabraniMec();
+                    break;
+                case 1:
+                    ObrisiOdabranuLigu();
+                    break;
+                case 2:
+                    ObrisiOdabranogSudionika();
+                    break;
+                case 3:
+                    ObrisiOdabranuIgru();
+                    break;
+                case 4:
+                    ObrisiOdabranuOrganizaciju();
+                    break;
+                case 5:
+                    ObrisiOdabranogOrganizatora();
+                    break;
+                case 6:
+                    ObrisiOdabranogProizvodaca();
+                    break;
+                case 7:
+                    ObrisiOdabraniTim();
+                    break;
+                case 8:
+                    ObrisiOdabranuUlogu();
+                    break; ;
+            }
+        }
+
+        private void ObrisiOdabraniTim()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var deleteSQL = new SQLiteCommand(@"DELETE FROM Tim WHERE ID_tim = @Id", con);
+                deleteSQL.Parameters.AddWithValue("Id", OdabraniTim.ID_Tim);
+
+                con.Open();
+
+                try
+                {
+                    deleteSQL.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno brisanje tima iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void ObrisiOdabraniMec()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var deleteSQL = new SQLiteCommand(@"DELETE FROM Mec WHERE ID_mec = @Id", con);
+                deleteSQL.Parameters.AddWithValue("Id", OdabraniMec.ID_Mec);
+
+                con.Open();
+
+                try
+                {
+                    deleteSQL.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno brisanje mec iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void ObrisiOdabranuOrganizaciju()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var deleteSQL = new SQLiteCommand(@"DELETE FROM Organizacija WHERE ID_org = @Id", con);
+                deleteSQL.Parameters.AddWithValue("Id", OdabranaOrganizacija.ID_Organizacija);
+
+                con.Open();
+
+                try
+                {
+                    deleteSQL.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno brisanje organizacije iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void ObrisiOdabranogOrganizatora()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var deleteSQL = new SQLiteCommand(@"DELETE FROM Organizator WHERE ID_organizator = @Id", con);
+                deleteSQL.Parameters.AddWithValue("Id", OdabraniOrganizator.ID_Organizator);
+
+                con.Open();
+
+                try
+                {
+                    deleteSQL.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno brisanje organizatora iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void ObrisiOdabranuLigu()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var deleteSQL = new SQLiteCommand(@"DELETE FROM Liga WHERE ID_liga = @Id", con);
+                deleteSQL.Parameters.AddWithValue("Id", OdabranaLiga.ID_Liga);
+
+                con.Open();
+
+                try
+                {
+                    deleteSQL.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno brisanje lige iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void ObrisiOdabranuIgru()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var deleteSQL = new SQLiteCommand(@"DELETE FROM Igra WHERE ID_igra = @Id", con);
+                deleteSQL.Parameters.AddWithValue("Id", OdabranaIgra.ID_Igra);
+
+                con.Open();
+
+                try
+                {
+                    deleteSQL.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno brisanje lige iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void ObrisiOdabranogProizvodaca()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var deleteSQL = new SQLiteCommand(@"DELETE FROM Proizvodac WHERE ID_proizvodac = @Id", con);
+                deleteSQL.Parameters.AddWithValue("Id", OdabraniProizvodac.ID_Proizvodac);
+
+                con.Open();
+
+                try
+                {
+                    deleteSQL.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno brisanje proizvodaca iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+        private void ObrisiOdabranogSudionika()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var deleteSQL = new SQLiteCommand(@"DELETE FROM Sudionik WHERE ID_sudionik = @Id", con);
+                deleteSQL.Parameters.AddWithValue("Id", OdabraniSudionik.ID_Sudionik);
+
+                con.Open();
+
+                try
+                {
+                    deleteSQL.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno brisanje sudionika iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+
+        }
+
+        private void ObrisiOdabranuUlogu()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var deleteSQL = new SQLiteCommand(@"DELETE FROM Uloga WHERE ID_uloga = @Id", con);
+                deleteSQL.Parameters.AddWithValue("Id", OdabranaUloga.ID_Uloga);
+
+                con.Open();
+
+                try
+                {
+                    deleteSQL.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno brisanje uloge iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+        #endregion
+
+        #region Pretraživanje
+        #endregion
     }
 }

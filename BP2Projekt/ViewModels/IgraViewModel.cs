@@ -30,7 +30,7 @@ namespace BP2Projekt.ViewModels
             set
             {
                 proizvodac = value;
-                Igra.FK_Proizvodac = value.ID;
+                Igra.FK_Proizvodac = value.ID_Proizvodac;
                // OnPropertyChanged("Proizvodac");
             }
         }
@@ -110,7 +110,7 @@ namespace BP2Projekt.ViewModels
                     {
                         ListaProizvodaci.Add(new ProizvodacModel()
                         {
-                            ID = Convert.ToInt32(s["ID_proizvodac"].ToString()),
+                            ID_Proizvodac = Convert.ToInt32(s["ID_proizvodac"].ToString()),
                             Naziv = s["NazivProizvodaca"].ToString()
                         });
                     }
@@ -139,7 +139,7 @@ namespace BP2Projekt.ViewModels
                     insert = @"UPDATE Igra SET NazivIgre=@Naziv, Zanr=@Zanr, FK_proizvodac=@FK_Proizvodac, MaxIgraca=@MaxIgraca WHERE ID_igra=@Id";
 
                 insertSQL = new SQLiteCommand(insert, con);
-                insertSQL.Parameters.AddWithValue("@Id", Proizvodac.ID);
+                insertSQL.Parameters.AddWithValue("@Id", Proizvodac.ID_Proizvodac);
                 insertSQL.Parameters.AddWithValue("@Naziv", Igra.Naziv);
                 insertSQL.Parameters.AddWithValue("@FK_Proizvodac", Igra.FK_Proizvodac);
                 insertSQL.Parameters.AddWithValue("@Zanr", Igra.Zanr);

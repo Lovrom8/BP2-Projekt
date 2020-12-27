@@ -189,7 +189,7 @@ namespace BP2Projekt.ViewModels
                 string insert;
                 SQLiteCommand insertSQL;
 
-                if (Liga.ID == -1)
+                if (Liga.ID_Liga == -1)
                     insert = @"INSERT INTO Liga (ID_liga, NazivLige, FK_organizator, FK_igra) VALUES (@ID, @Naziv, @FK_Organizator, @FK_Igra)";
                 else
                     insert = @"UPDATE Liga SET NazivLige=@Naziv, FK_organizator=@FK_Organizator, FK_igra=@FK_igra WHERE ID_liga=@Id";

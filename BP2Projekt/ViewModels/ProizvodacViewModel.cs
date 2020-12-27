@@ -48,7 +48,7 @@ namespace BP2Projekt.ViewModels
 
                     Proizvodac = new ProizvodacModel()
                     {
-                        ID = Convert.ToInt32(reader["ID_proizvodac"]),
+                        ID_Proizvodac = Convert.ToInt32(reader["ID_proizvodac"]),
                         Drzava = reader["Drzava"].ToString(),
                         Naziv = reader["NazivProizvodaca"].ToString()
                     };
@@ -73,13 +73,13 @@ namespace BP2Projekt.ViewModels
                 string insert;
                 SQLiteCommand insertSQL;
 
-                if (Proizvodac.ID == -1)
+                if (Proizvodac.ID_Proizvodac == -1)
                     insert = @"INSERT INTO Proizvodac (ID_proizvodac, Naziv, Drzava, FK_igra) VALUES (@ID, @Naziv, @Drzava)";
                 else
                     insert = @"UPDATE Proizvodac SET NazivProizvodaca=@Naziv, Drzava=@Drzava WHERE ID_proizvodac=@Id";
 
                 insertSQL = new SQLiteCommand(insert, con);
-                insertSQL.Parameters.AddWithValue("@Id", Proizvodac.ID);
+                insertSQL.Parameters.AddWithValue("@Id", Proizvodac.ID_Proizvodac);
                 insertSQL.Parameters.AddWithValue("@Naziv", Proizvodac.Naziv);
                 insertSQL.Parameters.AddWithValue("@Drzava", Proizvodac.Drzava);
 
@@ -102,7 +102,7 @@ namespace BP2Projekt.ViewModels
             ListaProizvodaca = parameters.GetValue<ObservableCollection<ProizvodacModel>>("listaProizvodaca");
             ID_Proizvodac = parameters.GetValue<int>("idProizvodac");
 
-            Proizvodac = new ProizvodacModel() { ID = -1 };
+            Proizvodac = new ProizvodacModel() { ID_Proizvodac = -1 };
             
             UcitajProizvodaca(ID_Proizvodac);
         }

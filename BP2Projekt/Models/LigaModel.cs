@@ -17,7 +17,7 @@ namespace BP2Projekt.Models
         private string nazivLige;
         private string igra;
 
-        public int ID
+        public int ID_Liga
         {
             get => id;
             set

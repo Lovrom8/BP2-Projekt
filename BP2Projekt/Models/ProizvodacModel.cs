@@ -14,7 +14,7 @@ namespace BP2Projekt.Models
         private string drzava;
         private string naziv;
 
-        public int ID
+        public int ID_Proizvodac
         {
             get => id;
             set
