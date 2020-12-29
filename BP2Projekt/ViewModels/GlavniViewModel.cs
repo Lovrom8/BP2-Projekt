@@ -7,6 +7,7 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
@@ -14,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace BP2Projekt.ViewModels
@@ -29,15 +31,15 @@ namespace BP2Projekt.ViewModels
             set => SetProperty(ref _odabraniTab, value);
         }
 
-        private readonly DelegateCommand _otvoriSudionikaCmd;
-        private readonly DelegateCommand _otvoriTimoveCmd;
-        private readonly DelegateCommand _otvoriOrganizatoraCmd;
-        private readonly DelegateCommand _otvoriOrganizacijuCmd;
-        private readonly DelegateCommand _otvoriLiguCmd;
-        private readonly DelegateCommand _otvoriProizvodacaCmd;
-        private readonly DelegateCommand _otvoriUloguCmd;
-        private readonly DelegateCommand _otvoriMecCmd;
-        private readonly DelegateCommand _otvoriIgruCmd;
+        private DelegateCommand _otvoriSudionikaCmd;
+        private DelegateCommand _otvoriTimoveCmd;
+        private DelegateCommand _otvoriOrganizatoraCmd;
+        private DelegateCommand _otvoriOrganizacijuCmd;
+        private DelegateCommand _otvoriLiguCmd;
+        private DelegateCommand _otvoriProizvodacaCmd;
+        private DelegateCommand _otvoriUloguCmd;
+        private DelegateCommand _otvoriMecCmd;
+        private DelegateCommand _otvoriIgruCmd;
 
         public ICommand OtvoriSudionikaCommand => _otvoriSudionikaCmd;
         public ICommand OtvoriTimCommand => _otvoriTimoveCmd;
@@ -59,16 +61,7 @@ namespace BP2Projekt.ViewModels
         public ObservableCollection<UlogaModel> ListaUloga { get; set; }
         public ObservableCollection<ProizvodacModel> ListaProizvodaca { get; set; }
 
-        private MecModel odabraniMec;
-        public MecModel OdabraniMec
-        {
-            get => odabraniMec; 
-            set
-            {
-                SetProperty(ref odabraniMec, value);
-            }
-        }
-
+        public MecModel OdabraniMec { get; set; }
         public LigaModel OdabranaLiga { get; set; }
         public SudionikModel OdabraniSudionik { get; set; }
         public IgraModel OdabranaIgra { get; set; }
@@ -80,21 +73,66 @@ namespace BP2Projekt.ViewModels
 
         private DelegateCommand _urediCmd;
         private DelegateCommand _obrisiCmd;
+        private DelegateCommand _pretraziCmd;
+
+        private ICollectionView meceviPogled;
+        private ICollectionView ligePogled;
+        private ICollectionView sudioniciPogled;
+        private ICollectionView igrePogled;
+        private ICollectionView timoviPogled;
+        private ICollectionView organizacijePogled;
+        private ICollectionView organizatoriPogled;
+        private ICollectionView ulogePogled;
+        private ICollectionView proizvodaciPogled;
+
         public ICommand UrediCommand => _urediCmd;
         public ICommand ObrisiCommand => _obrisiCmd;
+        public ICommand PretraziCommand => _pretraziCmd;
+
+        private string tekstPretrage;
+        public string TekstPretrage
+        {
+            get => tekstPretrage;
+            set => SetProperty(ref tekstPretrage, value);
+        }
+
+        private string filter;
+        public string Filter
+        {
+            get => filter;
+            set
+            {
+                if (value == filter)
+                    return;
+
+                filter = value;
+                switch (OdabraniTab)
+                {
+                    case 0: meceviPogled.Refresh(); break;
+                    case 1: ligePogled.Refresh(); break;
+                    case 2: sudioniciPogled.Refresh(); break;
+                    case 3: igrePogled.Refresh(); break;
+                    case 4: organizacijePogled.Refresh(); break;
+                    case 5: organizatoriPogled.Refresh(); break;
+                    case 6: proizvodaciPogled.Refresh(); break;
+                    case 7: timoviPogled.Refresh(); break;
+                    case 8: ulogePogled.Refresh(); break;
+                }
+                RaisePropertyChanged("Filter");
+            }
+        }
 
         public GlavniViewModel(IDialogService dialogService)
         {
-            _otvoriSudionikaCmd = new DelegateCommand(OtvoriSudionika);
-            _otvoriTimoveCmd = new DelegateCommand(OtvoriTim);
-            _otvoriOrganizatoraCmd = new DelegateCommand(OtvoriOrganizatora);
-            _otvoriOrganizacijuCmd = new DelegateCommand(OtvoriOrganizaciju);
-            _otvoriLiguCmd = new DelegateCommand(OtvoriLigu);
-            _otvoriIgruCmd = new DelegateCommand(OtvoriIgru);
-            _otvoriUloguCmd = new DelegateCommand(OtvoriUlogu);
-            _otvoriMecCmd = new DelegateCommand(OtvoriMec);
-            _otvoriProizvodacaCmd = new DelegateCommand(OtvoriProizvodaca);
+            PostaviGumbe();
+            PripremiListe();
+            PopuniPodatke();
+            PripremiPoglede();
+        }
 
+        #region Priprema podataka
+        private void PripremiListe()
+        {
             ListaMecevi = new ObservableCollection<MecModel>();
             ListaLige = new ObservableCollection<LigaModel>();
             ListaSudionici = new ObservableCollection<SudionikModel>();
@@ -104,7 +142,27 @@ namespace BP2Projekt.ViewModels
             ListaOrganizatora = new ObservableCollection<OrganizatorModel>();
             ListaUloga = new ObservableCollection<UlogaModel>();
             ListaProizvodaca = new ObservableCollection<ProizvodacModel>();
+        }
 
+        private void PostaviGumbe()
+        {
+            _obrisiCmd = new DelegateCommand(ObrisiRedak);
+            _urediCmd = new DelegateCommand(UrediTablicu);
+            _pretraziCmd = new DelegateCommand(PretraziTablicu);
+
+            _otvoriSudionikaCmd = new DelegateCommand(OtvoriSudionika);
+            _otvoriTimoveCmd = new DelegateCommand(OtvoriTim);
+            _otvoriOrganizatoraCmd = new DelegateCommand(OtvoriOrganizatora);
+            _otvoriOrganizacijuCmd = new DelegateCommand(OtvoriOrganizaciju);
+            _otvoriLiguCmd = new DelegateCommand(OtvoriLigu);
+            _otvoriIgruCmd = new DelegateCommand(OtvoriIgru);
+            _otvoriUloguCmd = new DelegateCommand(OtvoriUlogu);
+            _otvoriMecCmd = new DelegateCommand(OtvoriMec);
+            _otvoriProizvodacaCmd = new DelegateCommand(OtvoriProizvodaca);
+        }
+
+        private void PopuniPodatke()
+        {
             PopuniMečeve();
             PopuniLige();
             PopuniSudionike();
@@ -114,12 +172,47 @@ namespace BP2Projekt.ViewModels
             PopuniUloge();
             PopuniProizvodaca();
             PopuniTimove();
-
-            _dialogService = dialogService;
-            _obrisiCmd = new DelegateCommand(ObrisiRedak);
-            _urediCmd = new DelegateCommand(UrediTablicu);
         }
 
+        private void PripremiPoglede()
+        {
+            meceviPogled = CollectionViewSource.GetDefaultView(ListaMecevi);
+            meceviPogled.Filter = o => String.IsNullOrEmpty(Filter) ? true : 
+                                       ((MecModel)o).TimA.Contains(Filter) || ((MecModel)o).TimB.Contains(Filter);
+
+            ligePogled = CollectionViewSource.GetDefaultView(ListaLige);
+            ligePogled.Filter = o => String.IsNullOrEmpty(Filter) ? true :
+                                     ((LigaModel)o).Igra.Contains(Filter) || ((LigaModel)o).Naziv.Contains(Filter) || ((LigaModel)o).Organizator.Contains(Filter);
+
+            sudioniciPogled = CollectionViewSource.GetDefaultView(ListaSudionici);
+            sudioniciPogled.Filter = o => String.IsNullOrEmpty(Filter) ? true :
+                                    ((SudionikModel)o).Nick.Contains(Filter) || ((SudionikModel)o).UlogaNaziv.Contains(Filter) || ((SudionikModel)o).Drzava.Contains(Filter);
+
+            igrePogled = CollectionViewSource.GetDefaultView(ListaIgre);
+            igrePogled.Filter = o => String.IsNullOrEmpty(Filter) ? true :
+                         ((IgraModel)o).MaxIgraca.ToString().Contains(Filter) || ((IgraModel)o).Naziv.Contains(Filter) || ((IgraModel)o).Proizvodac.Contains(Filter);
+
+            organizacijePogled = CollectionViewSource.GetDefaultView(ListaOrganizacija);
+            organizacijePogled.Filter = o => String.IsNullOrEmpty(Filter) ? true :
+                         ((OrganizacijaModel)o).Naziv.Contains(Filter) || ((OrganizacijaModel)o).Drzava.Contains(Filter) || ((OrganizacijaModel)o).Osnovana.Contains(Filter);
+
+            organizatoriPogled = CollectionViewSource.GetDefaultView(ListaOrganizatora);
+            organizatoriPogled.Filter = o => String.IsNullOrEmpty(Filter) ? true :
+             ((OrganizatorModel)o).Naziv.Contains(Filter) || ((OrganizatorModel)o).Drzava.Contains(Filter) || ((OrganizatorModel)o).Osnovan.Contains(Filter);
+
+            proizvodaciPogled = CollectionViewSource.GetDefaultView(ListaProizvodaca);
+            proizvodaciPogled.Filter = o => String.IsNullOrEmpty(Filter) ? true :
+             ((ProizvodacModel)o).Naziv.Contains(Filter) || ((ProizvodacModel)o).Drzava.Contains(Filter);
+
+            timoviPogled = CollectionViewSource.GetDefaultView(ListaTimovi);
+            timoviPogled.Filter = o => String.IsNullOrEmpty(Filter) ? true :
+             ((TimModel)o).Naziv.Contains(Filter);
+
+            ulogePogled = CollectionViewSource.GetDefaultView(ListaUloga);
+            ulogePogled.Filter = o => String.IsNullOrEmpty(Filter) ? true :
+             ((UlogaModel)o).Naziv.Contains(Filter) || ((UlogaModel)o).IgraNaziv.Contains(Filter);
+        }
+        #endregion
         #region Otvaranje prozorčića
         private void UrediTablicu()
         {
@@ -303,8 +396,9 @@ namespace BP2Projekt.ViewModels
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT L.*, O.NazivOrganizatora AS OrganizatorNaziv FROM Liga L
+                var selectSQL = new SQLiteCommand(@"SELECT L.*, I.NazivIgre, O.NazivOrganizatora AS OrganizatorNaziv FROM Liga L
                                                     JOIN Organizator O ON L.FK_organizator = O.ID_organizator
+                                                    JOIN Igra I ON I.ID_igra = L.FK_igra
                                                     ", con);
 
                 con.Open();
@@ -325,7 +419,9 @@ namespace BP2Projekt.ViewModels
                             ID_Liga = Convert.ToInt32(s["ID_liga"].ToString()),
                             Naziv = s["NazivLige"].ToString(),
                             FK_Organizator = Convert.ToInt32(s["FK_organizator"].ToString()),
-                            Organizator = s["OrganizatorNaziv"].ToString()
+                            Organizator = s["OrganizatorNaziv"].ToString(),
+                            FK_Igra = Convert.ToInt32(s["FK_igra"].ToString()),
+                            Igra = s["NazivIgre"].ToString()
                         });
                     }
                 }
@@ -609,7 +705,6 @@ namespace BP2Projekt.ViewModels
             }
         }
         #endregion
-
         #region Brisanje
         private void ObrisiRedak()
         {
@@ -844,8 +939,92 @@ namespace BP2Projekt.ViewModels
             }
         }
         #endregion
-
         #region Pretraživanje
+        private void PretraziTablicu()
+        {
+            switch (OdabraniTab)
+            {
+                /*  case 0:
+                      PretraziMeceve();
+                      break;
+                  case 1:
+                      PretraziLige();
+                      break;
+                  case 2:
+                      PretraziSudionike();
+                      break;
+                  case 3:
+                      PretraziIgre();
+                      break;
+                  case 4:
+                      PretraziOrganizacije();
+                      break;
+                  case 5:
+                      PretraziOrganizatore();
+                      break;
+                  case 6:
+                      PretraziProizvodace();
+                      break;
+                  case 7:
+                      PretraziTimove();
+                      break;
+                  case 8:
+                      PretraziUloge();
+                      break;*/
+            }
+        }
+
+        private void PretraziUloge()
+        {
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Uloga WHERE NazivUloge=@Nazivt", con);
+
+                con.Open();
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    //reader.Read(); PAZI - read tu bi preskočilo prvi red!
+                    if (!reader.HasRows)
+                        return;
+
+                    ListaMecevi.Clear();
+
+                    foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
+                    {
+                        ListaMecevi.Add(new MecModel()
+                        {
+                            ID_Mec = Convert.ToInt32(s["ID_mec"]),
+                            FK_TimA = Convert.ToInt32(s["FK_timA"]),
+                            FK_TimB = Convert.ToInt32(s["FK_timB"]),
+                            RezultatA = Convert.ToInt32(s["RezultatA"]),
+                            RezultatB = Convert.ToInt32(s["RezultatB"]),
+                            FK_Pobjednik = Convert.ToInt32(s["FK_Pobjednik"]),
+                            TimA = s["T1_Naziv"].ToString(),
+                            TimB = s["T2_Naziv"].ToString()
+                        });
+                    }
+
+                    foreach (var mec in ListaMecevi)
+                    {
+                        if (mec.FK_TimA == mec.FK_Pobjednik)
+                            mec.Pobjednik = mec.TimA;
+                        else
+                            mec.Pobjednik = mec.TimB;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno čitanje mečeva iz baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
+
         #endregion
     }
 }

@@ -155,7 +155,6 @@
     <Compile Include="Models\SudionikModel.cs" />
     <Compile Include="Models\TimModel.cs" />
     <Compile Include="Models\UlogaModel.cs" />
-    <Compile Include="Util\ProzorManager.cs" />
     <Compile Include="ViewModels\BazniDialogViewModel.cs" />
     <Compile Include="ViewModels\GlavniViewModel.cs" />
     <Compile Include="ViewModels\IgracTrenerRadioModel.cs" />
