@@ -29,7 +29,7 @@ namespace BP2Projekt
         }
 
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;
-        public OrganizacijaModel Organizacija { get; }
+        public OrganizacijaModel Organizacija { get; set; }
 
         private int _idOrg;
         public int ID_Org
@@ -41,7 +41,6 @@ namespace BP2Projekt
         public OrganizacijaViewModel()
         {
             _dodajIliOsvjeziCommand = new DelegateCommand(DodajIliOsvjezi);
-            Organizacija = new OrganizacijaModel();
         }
 
         private void UcitajOrganizaciju(int ID)
@@ -64,10 +63,14 @@ namespace BP2Projekt
                         return;
 
                     reader.Read();
-                    Organizacija.ID_Organizacija = ID;
-                    Organizacija.Naziv = reader["NazivOrganizacije"].ToString();
-                    Organizacija.Drzava = reader["Drzava"].ToString();
-                    Organizacija.Osnovana = reader["Osnovana"].ToString();
+
+                    Organizacija = new OrganizacijaModel()
+                    {
+                        ID_Organizacija = ID,
+                        Naziv = reader["NazivOrganizacije"].ToString(),
+                        Drzava = reader["Drzava"].ToString(),
+                        Osnovana = reader["Osnovana"].ToString()
+                    };
                 }
                 catch (Exception ex)
                 {
@@ -83,8 +86,6 @@ namespace BP2Projekt
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
                 con.Open();
-
-                //var insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Organizacija (ID_org, NazivOrganizacije, Osnovana, Drzava) VALUES (@Id, @Naziv, @Osnovana, @Drzava)", con);
 
                 string insert;
                 SQLiteCommand insertSQL;
@@ -119,6 +120,8 @@ namespace BP2Projekt
         {
             ListaOrganizacija = parameters.GetValue<ObservableCollection<OrganizacijaModel>>("listaOrganizacija");
             ID_Org = parameters.GetValue<int>("idOrg");
+
+            Organizacija = new OrganizacijaModel() { ID_Organizacija = ID_Org };
 
             UcitajOrganizaciju(ID_Org);
         }

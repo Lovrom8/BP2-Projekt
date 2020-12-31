@@ -51,7 +51,7 @@ namespace BP2Projekt.ViewModels
                     Organizator = new OrganizatorModel()
                     {
                         ID_Organizator = ID,
-                        Naziv = reader["Naziva"].ToString(),
+                        Naziv = reader["NazivOrganizatora"].ToString(),
                         Drzava = reader["Drzava"].ToString(),
                         Osnovan = reader["Osnovan"].ToString(),
                     };
@@ -74,10 +74,8 @@ namespace BP2Projekt.ViewModels
                 string insert;
                 SQLiteCommand insertSQL;
 
-                //var insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Organizator (ID_organizator, NazivOrganizatora, Osnovan, Drzava) VALUES (NULL, @Naziv, @Osnovan, @Drzava)", con);
-                //var insertSQL = new SQLiteCommand(@"INSERT OR REPLACE INTO Organizator (ID_organizator, NazivOrganizatora, Osnovan, Drzava) VALUES (@ID, @Naziv, @Osnovan, @Drzava)", con);
                 if (Organizator.ID_Organizator == -1)
-                    insert = @"INSERT INTO Organizator (ID_organizator, NazivOrganizatora, Osnovan, Drzava) VALUES (@ID, @Naziv, @Osnovan, @Drzava)";
+                    insert = @"INSERT INTO Organizator (NazivOrganizatora, Osnovan, Drzava) VALUES (@Naziv, @Osnovan, @Drzava)";
                 else
                     insert = @"UPDATE Organizator SET NazivOrganizatora=@Naziv, Osnovan=@Osnovan, Drzava=@Drzava WHERE ID_organizator=@Id";
 
@@ -106,6 +104,7 @@ namespace BP2Projekt.ViewModels
             ListaOrganizatora = parameters.GetValue<ObservableCollection<OrganizatorModel>>("listaOrganizatora");
             ID_organizatora = parameters.GetValue<int>("idOrganizator");
 
+            Organizator = new OrganizatorModel() { ID_Organizator = ID_organizatora};
             UcitajOrganizatora(ID_organizatora);
         }
     }

@@ -40,28 +40,20 @@
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="50" />
         </Grid.ColumnDefinitions>
-
-        <Label Content="Naziv:" Grid.Column="1" Grid.Row="1" />
-        <TextBox Name="tbNaziv" Grid.Column="3" Grid.Row="1" Height="20" 
+        
+        <Label Content="Naziv:" Grid.Column="1" Grid.Row="1" Height="30" />
+        <TextBox Name="tbNaziv" Grid.Column="3" Grid.Row="1" Height="27" 
                  Text="{Binding Path=Liga.Naziv}"/>
-
-        <Label Content="Organizator:" Grid.Column="1" Grid.Row="3" />
-        <ComboBox Grid.Column="3" Grid.Row="3" Name="comboOrganizatori" Height="25"
+        
+        <Label Content="Organizator:" Grid.Column="1" Grid.Row="3" Height="30" />
+        <ComboBox Grid.Column="3" Grid.Row="3" Name="comboOrganizatori" Height="30"
                   ItemsSource="{Binding ListaOrganizatori}" SelectedItem="{Binding Organizator}" DisplayMemberPath="Naziv" />
-
-        <Label Content="Igra:" Grid.Column="1" Grid.Row="5" />
-        <ComboBox Grid.Column="3" Grid.Row="5" Name="comboIgre" Height="25"
+        
+        <Label Content="Igra:" Grid.Column="1" Grid.Row="5" Height="30" />
+        <ComboBox Grid.Column="3" Grid.Row="5" Name="comboIgre" Height="30"
                   ItemsSource="{Binding ListaIgre}" SelectedItem="{Binding Igra}" DisplayMemberPath="Naziv" />
-
-        <Button Name="btnDodaj" HorizontalAlignment="Right" Margin="3" MinWidth="80"  Grid.Column="3" Grid.Row="7" Command="{Binding Path=DodajIliOsvjeziCommand}">
+        <Button Name="btnDodaj" HorizontalAlignment="Right" Margin="3" MinWidth="80" Grid.Column="3" Grid.Row="7" Command="{Binding Path=DodajIliOsvjeziCommand}">
             <TextBlock>Dodaj</TextBlock>
         </Button>
-
-
-        <StatusBar Grid.Row="9" HorizontalAlignment="Stretch" Grid.ColumnSpan="5">
-            <StatusBarItem>
-                <TextBlock Name="lblStatus" />
-            </StatusBarItem>
-        </StatusBar>
     </Grid>
 </UserControl>

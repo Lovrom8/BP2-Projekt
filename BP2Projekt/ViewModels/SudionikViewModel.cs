@@ -26,10 +26,6 @@ namespace BP2Projekt.ViewModels
         public ObservableCollection<IgraModel> ListaIgre { get; set; }
 
         private IgraModel _igra;
-
-        public SudionikModel Sudionik { get; set; }
-        public UlogaModel Uloga { get; set; }
-        public OrganizacijaModel Organizacija { get; set; }
         public IgraModel Igra
         {
             get => _igra;
@@ -39,7 +35,13 @@ namespace BP2Projekt.ViewModels
                 OsvjeziUloge(value.ID_Igra);
             }
         }
+        public SudionikModel Sudionik { get; set; }
+        public UlogaModel Uloga { get; set; }
+        public OrganizacijaModel Organizacija { get; set; }
+      
         public IgracTrenerRadioModel RadioModel { get; set; }
+        public ObservableCollection<SudionikModel> ListaSudionika { get; set; }
+        public int ID_Sudionik { get; private set; }
 
         public SudionikViewModel()
         {
@@ -77,7 +79,7 @@ namespace BP2Projekt.ViewModels
                         ListaIgre.Add(new IgraModel()
                         {
                             ID_Igra = Convert.ToInt32(s["ID_igra"].ToString()),
-                            Naziv = s["Naziv"].ToString(),
+                            Naziv = s["NazivIgre"].ToString(),
                             Zanr = s["Zanr"].ToString()
                         });
                     }
@@ -132,7 +134,7 @@ namespace BP2Projekt.ViewModels
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT * FROM Organizacija", con);
+                var selectSQL = new SQLiteCommand(@"SELECT ID_org, NazivOrganizacije FROM Organizacija", con);
                 con.Open();
 
                 try
@@ -156,27 +158,28 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno citanje iz baze, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno citanje organizacija baze, greška: {ex.Message}");
                 }
 
                 con.Close();
             }
         }
 
-        private void PopuniInfo(string nick)
+        private void PopuniInfo(int ID_Igrac)
         {
-            if (nick == string.Empty)
+            if (ID_Igrac == -1)
                 return;
 
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT S.*, T.Naziv AS NazivTima, O.*, I.ID_igra FROM Sudionik S 
+                var selectSQL = new SQLiteCommand(@"SELECT S.*, T.NazivTima AS NazivTima, O.*, I.ID_igra FROM Sudionik S 
                                                     JOIN Tim T ON S.FK_tim = T.ID_tim
                                                     JOIN Organizacija O ON O.ID_org = T.FK_organizacija 
                                                     JOIN Igra I ON I.ID_igra = T.FK_igra
-                                                    WHERE Nadimak=@Nick 
-                                                    ", con);
-                selectSQL.Parameters.AddWithValue("@Nick", nick);
+                                                    JOIN Igrac IG ON IG.FK_sudionik = @Id
+                                                    JOIN Trener TR ON TR.FK_sudionik = @Id
+                                                    WHERE ID_sudionik = @Id", con);
+                selectSQL.Parameters.AddWithValue("@Id", ID_Igrac);
 
                 con.Open();
 
@@ -201,13 +204,12 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno citanje iz baze, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno citanje trenutnog igraca baze, greška: {ex.Message}");
                 }
 
                 con.Close();
             }
         }
-
 
         private void DodajSudionika()
         {
@@ -294,9 +296,14 @@ namespace BP2Projekt.ViewModels
 
         public override void OnDialogOpened(IDialogParameters parameters)
         {
+            ListaSudionika = parameters.GetValue<ObservableCollection<SudionikModel>>("listaSudionika");
+            ID_Sudionik = parameters.GetValue<int>("idSudionik");
+
+            Sudionik = new SudionikModel() { ID_Sudionik = -1 };
+
             PopuniOrganizacije();
             PopuniIgre();
-            // PopuniInfo(nick);
+            PopuniInfo(ID_Sudionik);
         }
     }
 }

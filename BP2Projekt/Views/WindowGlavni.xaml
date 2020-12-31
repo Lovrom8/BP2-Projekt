@@ -1,4 +1,4 @@
-﻿<mde:MaterialWindow x:Class="BP2Projekt.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:system="clr-namespace:System;assembly=mscorlib" xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions" mc:Ignorable="d" Title="esport evidencija" Height="450" Width="1200" Icon="../Resources/esportsIco.png" TextElement.Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}">
+﻿<mde:MaterialWindow x:Class="BP2Projekt.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:system="clr-namespace:System;assembly=mscorlib" xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions" mc:Ignorable="d" Title="esport evidencija" Height="850" Width="1200" Icon="../Resources/esportsIco.png" TextElement.Foreground="{DynamicResource MaterialDesignBody}" Background="{DynamicResource MaterialDesignPaper}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,7 +25,7 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0" Height="25" Text="{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                <Button Grid.Column="1" Content="Pretraži" Width="150" Command="{Binding PretraziCommand}"></Button>
+                <!--<Button Grid.Column="1" Content="Pretraži" Width="150" Command="{Binding PretraziCommand}"></Button> -->
             </Grid>
             <TabControl Style="{StaticResource MaterialDesignTabControl}" SelectedIndex="{Binding OdabraniTab}">
                 <TabItem Header="Mečevi">
@@ -39,26 +39,105 @@
                                 <DataGridTextColumn Binding="{Binding Pobjednik}" Header="Pobjednik" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                             </DataGrid.Columns>
                         </DataGrid>
-                        <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="32" Grid.Row="1">
-                            <StackPanel>
-                                <Button ToolTip="Dodaj sudionike" Content="Sud" Command="{Binding OtvoriSudionikaCommand}" />
-                                <Button ToolTip="Dodaj timove" Content="Tim" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Command="{Binding OtvoriTimCommand}" />
-                                <Button ToolTip="Dodaj organizatora" Content="Meč" Command="{Binding OtvoriOrganizatoraCommand}">
-                                    <!-- mix up the colours by bringing in a named palette (see merged dictionaries at top) -->
-                                    <Button.Background>
-                                        <SolidColorBrush Color="{StaticResource GreenPrimary500}" />
-                                    </Button.Background>
-                                    <Button.Foreground>
-                                        <SolidColorBrush Color="{StaticResource GreenPrimary500Foreground}" />
-                                    </Button.Foreground>
-                                </Button>
-                                <Button ToolTip="Dodaj ligu" Content="Liga" Command="{Binding OtvoriLiguCommand}" />
-                                <Button ToolTip="Dodaj organizatora" Content="Orgor" Command="{Binding OtvoriOrganizatoraCommand}" />
-                                <Button ToolTip="Dodaj proizvođača" Content="Proiz" Command="{Binding OtvoriProizvodacaCommand}" />
-                                <Button ToolTip="Dodaj organizaciju" Content="Orgzc" Command="{Binding OtvoriOrganizacijuCommand}" />
-                                <Button ToolTip="Dodaj tim" Content="Tim" Command="{Binding OtvoriTimCommand}" />
-                                <Button ToolTip="Dodaj ulogu" Content="Uloga" Command="{Binding OtvoriUloguCommand}" />
-                                <!--
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="Lige">
+                    <DataGrid ItemsSource="{Binding ListaLige}" CanUserAddRows="False" SelectedItem="{Binding OdabranaLiga, Mode=TwoWay}" SelectionUnit="FullRow" IsReadOnly="True" SelectionMode="Extended" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Organizator}" Header="Organizator" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Sudionici">
+                    <DataGrid SelectedItem="{Binding OdabraniSudionik, Mode=TwoWay}" ItemsSource="{Binding ListaSudionici}" CanUserAddRows="False" SelectionUnit="FullRow" IsReadOnly="True" SelectionMode="Extended" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Nick}" Header="Nadimak" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding UlogaNaziv}" Header="Uloga" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Drzava}" Header="Drzava" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding TimNaziv}" Header="Tim" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Aktivan}" Header="Aktivan" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Igre">
+                    <DataGrid SelectedItem="{Binding OdabranaIgra, Mode=TwoWay}" ItemsSource="{Binding ListaIgre}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Proizvodac}" Header="Proizvodac" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Zanr}" Header="Zanr" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding MaxIgraca}" Header="Broj igraca" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Organizacije">
+                    <DataGrid SelectedItem="{Binding OdabranaOrganizacija, Mode=TwoWay}" ItemsSource="{Binding ListaOrganizacija}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Osnovana}" Header="Osnovana" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding BrojTimova}" Header="Broj timova" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Drzava}" Header="Država" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Organizatori">
+                    <DataGrid SelectedItem="{Binding OdabraniOrganizator, Mode=TwoWay}" ItemsSource="{Binding ListaOrganizatora}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Osnovan}" Header="Osnovan" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Drzava}" Header="Država" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Proizvođači">
+                    <DataGrid SelectedItem="{Binding OdabraniProizvodac, Mode=TwoWay}" ItemsSource="{Binding ListaProizvodaca}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Drzava}" Header="Proizvodac" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Timovi">
+                    <DataGrid SelectedItem="{Binding OdabraniTim, Mode=TwoWay}" ItemsSource="{Binding ListaTimovi}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Igra}" Header="Igra" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Organizacija}" Header="Organizacija" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Uloge">
+                    <DataGrid SelectedItem="{Binding OdabranaUloga, Mode=TwoWay}" ItemsSource="{Binding ListaUloga}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" IsReadOnly="True" AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding IgraNaziv}" Header="Igra" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
+            <Button Content="Obrisi" Command="{Binding ObrisiCommand}" Width="500" />
+            <Button Content="Uredi" Command="{Binding UrediCommand}" Width="500"/>
+            <materialDesign:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="32" Grid.Row="1">
+                <StackPanel>
+                    <Button ToolTip="Dodaj sudionike" Content="Sud" Command="{Binding OtvoriSudionikaCommand}" />
+                    <Button ToolTip="Dodaj timove" Content="Tim" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Command="{Binding OtvoriTimCommand}" />
+                    <Button ToolTip="Dodaj organizatora" Content="Meč" Command="{Binding OtvoriOrganizatoraCommand}">
+                        <!-- mix up the colours by bringing in a named palette (see merged dictionaries at top) -->
+                        <Button.Background>
+                            <SolidColorBrush Color="{StaticResource GreenPrimary500}" />
+                        </Button.Background>
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{StaticResource GreenPrimary500Foreground}" />
+                        </Button.Foreground>
+                    </Button>
+                    <Button ToolTip="Dodaj igru" Content="Igra" Command="{Binding OtvoriIgruCommand}" />
+                    <Button ToolTip="Dodaj ligu" Content="Liga" Command="{Binding OtvoriLiguCommand}" />
+                    <Button ToolTip="Dodaj organizatora" Content="Orgor" Command="{Binding OtvoriOrganizatoraCommand}" />
+                    <Button ToolTip="Dodaj proizvođača" Content="Proiz" Command="{Binding OtvoriProizvodacaCommand}" />
+                    <Button ToolTip="Dodaj organizaciju" Content="Orgzc" Command="{Binding OtvoriOrganizacijuCommand}" />
+                    <Button ToolTip="Dodaj tim" Content="Tim" Command="{Binding OtvoriTimCommand}" />
+                    <Button ToolTip="Dodaj ulogu" Content="Uloga" Command="{Binding OtvoriUloguCommand}" />
+                    <!--
 
 
                             <Button Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}" Content="Edit" >
@@ -71,85 +150,8 @@
                         </Button.CommandParameter>
                             </Button>
                             -->
-                            </StackPanel>
-                        </materialDesign:PopupBox>
-                    </DockPanel>
-                </TabItem>
-                <TabItem Header="Lige">
-                    <DataGrid ItemsSource="{Binding ListaLige}" CanUserAddRows="False" SelectedItem="{Binding OdabranaLiga, Mode=TwoWay}" SelectionUnit="FullRow" IsReadOnly="True" SelectionMode="Extended" AutoGenerateColumns="false">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Organizator}" Header="Organizator" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-                <TabItem Header="Sudionici">
-                    <DataGrid SelectedItem="{Binding OdbraniSudionik, Mode=TwoWay}" ItemsSource="{Binding ListaSudionici}" CanUserAddRows="False" SelectionUnit="Cell" SelectionMode="Extended" AutoGenerateColumns="false">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Nick}" Header="Nadimak" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding UlogaNaziv}" Header="Uloga" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Drzava}" Header="Drzava" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding TimNaziv}" Header="Tim" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Aktivan}" Header="Aktivan" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-                <TabItem Header="Igre">
-                    <DataGrid SelectedItem="{Binding OdabranaIgra, Mode=TwoWay}" ItemsSource="{Binding ListaIgre}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" AutoGenerateColumns="false">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Proizvodac}" Header="Proizvodac" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Zanr}" Header="Zanr" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding MaxIgraca}" Header="Broj igraca" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-                <TabItem Header="Organizacije">
-                    <DataGrid SelectedItem="{Binding OdabranaOrganizacija, Mode=TwoWay}" ItemsSource="{Binding ListaOrganizacija}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" AutoGenerateColumns="false">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Proizvodac}" Header="Proizvodac" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Zanr}" Header="Zanr" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding MaxIgraca}" Header="Broj igraca" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-                <TabItem Header="Organizatori">
-                    <DataGrid SelectedItem="{Binding OdabraniOrganizator, Mode=TwoWay}" ItemsSource="{Binding ListaOrganizatora}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" AutoGenerateColumns="false">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Drzava}" Header="Drzava" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Zanr}" Header="Zanr" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding MaxIgraca}" Header="Broj igraca" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-                <TabItem Header="Proizvođači">
-                    <DataGrid SelectedItem="{Binding OdabraniProizvodac, Mode=TwoWay}" ItemsSource="{Binding ListaProizvodaca}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" AutoGenerateColumns="false">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding Drzava}" Header="Proizvodac" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-                <TabItem Header="Timovi">
-                    <DataGrid SelectedItem="{Binding OdabraniTim, Mode=TwoWay}" ItemsSource="{Binding ListaTimova}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" AutoGenerateColumns="false">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-                <TabItem Header="Uloge">
-                    <DataGrid SelectedItem="{Binding OdabranaUloga, Mode=TwoWay}" ItemsSource="{Binding ListaUloga}" CanUserAddRows="False" SelectionUnit="FullRow" SelectionMode="Extended" AutoGenerateColumns="false">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                            <DataGridTextColumn Binding="{Binding IgraNaziv}" Header="Igra" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-            </TabControl>
-            <Button Content="Obrisi" Command="{Binding ObrisiCommand}" Width="500" />
-            <Button Content="Uredi" Command="{Binding UrediCommand}" Width="500"/>
+                </StackPanel>
+            </materialDesign:PopupBox>
         </StackPanel>
     </materialDesign:DialogHost>
 </mde:MaterialWindow>

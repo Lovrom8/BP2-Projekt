@@ -11,6 +11,8 @@ namespace BP2Projekt.Models
         private int id;
         private ObservableCollection<IgracModel> igraci;
         private string naziv;
+        private string igra;
+        private string organizacija;
 
         public int ID_Tim
         {
@@ -34,6 +36,31 @@ namespace BP2Projekt.Models
                     return;
 
                 naziv = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Igra
+        {
+            get => igra;
+            set
+            {
+                if (igra == value)
+                    return;
+
+                igra = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string Organizacija
+        {
+            get => organizacija;
+            set
+            {
+                if (organizacija == value)
+                    return;
+
+                organizacija = value;
                 NotifyPropertyChanged();
             }
         }

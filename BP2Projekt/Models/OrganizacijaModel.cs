@@ -12,6 +12,7 @@ namespace BP2Projekt.Models
         private string naziv;
         private string osnovana;
         private string drzava;
+        private int brojTimova;
 
         public int ID_Organizacija
         {
@@ -61,6 +62,19 @@ namespace BP2Projekt.Models
                     return;
 
                 drzava = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int BrojTimova
+        {
+            get => brojTimova;
+            set
+            {
+                if (brojTimova == value)
+                    return;
+
+                brojTimova = value;
                 NotifyPropertyChanged();
             }
         }

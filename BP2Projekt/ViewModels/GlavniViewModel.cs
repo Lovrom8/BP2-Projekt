@@ -124,6 +124,8 @@ namespace BP2Projekt.ViewModels
 
         public GlavniViewModel(IDialogService dialogService)
         {
+            _dialogService = dialogService;
+
             PostaviGumbe();
             PripremiListe();
             PopuniPodatke();
@@ -547,7 +549,10 @@ namespace BP2Projekt.ViewModels
                         ListaOrganizacija.Add(new OrganizacijaModel()
                         {
                             ID_Organizacija = Convert.ToInt32(s["ID_org"]),
-                            Naziv = s["NazivOrganizacije"].ToString()
+                            Naziv = s["NazivOrganizacije"].ToString(),
+                            Drzava = s["Drzava"].ToString(),
+                            Osnovana = s["Osnovana"].ToString(),
+                            BrojTimova = Convert.ToInt32(reader["BrojTimova"])
                         });
                     }
                 }
@@ -674,7 +679,7 @@ namespace BP2Projekt.ViewModels
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT * FROM Tim", con);
+                var selectSQL = new SQLiteCommand(@"SELECT T.*, O.NazivOrganizacije, I.NazivIgre FROM Tim T JOIN Organizacija O ON O.ID_org == T.FK_Organizacija JOIN Igra I ON I.ID_igra = T.FK_igra", con);
 
                 con.Open();
 
@@ -692,7 +697,9 @@ namespace BP2Projekt.ViewModels
                         ListaTimovi.Add(new TimModel()
                         {
                             ID_Tim = Convert.ToInt32(s["ID_tim"]),
-                            Naziv = s["NazivTima"].ToString()
+                            Naziv = s["NazivTima"].ToString(),
+                            Igra = s["NazivIgre"].ToString(),
+                            Organizacija = s["NazivOrganizacije"].ToString()
                         });
                     }
                 }
@@ -752,6 +759,7 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     deleteSQL.ExecuteNonQuery();
+                    ListaTimovi.Remove(ListaTimovi.FirstOrDefault(t => t.ID_Tim == OdabraniTim.ID_Tim));
                 }
                 catch (Exception ex)
                 {
@@ -774,6 +782,7 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     deleteSQL.ExecuteNonQuery();
+                    ListaMecevi.Remove(ListaMecevi.FirstOrDefault(m => m.ID_Mec == OdabraniMec.ID_Mec));
                 }
                 catch (Exception ex)
                 {
@@ -796,6 +805,7 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     deleteSQL.ExecuteNonQuery();
+                    ListaOrganizacija.Remove(ListaOrganizacija.FirstOrDefault(o => o.ID_Organizacija == OdabranaOrganizacija.ID_Organizacija));
                 }
                 catch (Exception ex)
                 {
@@ -818,6 +828,7 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     deleteSQL.ExecuteNonQuery();
+                    ListaOrganizatora.Remove(ListaOrganizatora.FirstOrDefault(o => o.ID_Organizator == OdabraniOrganizator.ID_Organizator));
                 }
                 catch (Exception ex)
                 {
@@ -840,6 +851,7 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     deleteSQL.ExecuteNonQuery();
+                    ListaLige.Remove(ListaLige.FirstOrDefault(o => o.ID_Liga == OdabranaLiga.ID_Liga));
                 }
                 catch (Exception ex)
                 {
@@ -862,6 +874,7 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     deleteSQL.ExecuteNonQuery();
+                    ListaIgre.Remove(ListaIgre.FirstOrDefault(i => i.ID_Igra == OdabranaIgra.ID_Igra));
                 }
                 catch (Exception ex)
                 {
@@ -884,6 +897,7 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     deleteSQL.ExecuteNonQuery();
+                    ListaProizvodaca.Remove(ListaProizvodaca.FirstOrDefault(p => p.ID_Proizvodac == OdabraniProizvodac.ID_Proizvodac));
                 }
                 catch (Exception ex)
                 {
@@ -906,6 +920,7 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     deleteSQL.ExecuteNonQuery();
+                    ListaSudionici.Remove(ListaSudionici.FirstOrDefault(s => s.ID_Sudionik == OdabraniSudionik.ID_Sudionik));
                 }
                 catch (Exception ex)
                 {
@@ -929,6 +944,7 @@ namespace BP2Projekt.ViewModels
                 try
                 {
                     deleteSQL.ExecuteNonQuery();
+                    ListaUloga.Remove(ListaUloga.FirstOrDefault(u => u.ID_Uloga == OdabranaUloga.ID_Uloga));
                 }
                 catch (Exception ex)
                 {

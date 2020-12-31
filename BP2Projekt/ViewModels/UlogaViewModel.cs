@@ -51,8 +51,6 @@ namespace BP2Projekt.ViewModels
         public UlogaViewModel()
         {
             _dodajIliOsvjeziCommand = new DelegateCommand(DodajIliOsvjezi);
-        
-
         }
 
         private void UcitajUlogu(int ID)
@@ -115,7 +113,7 @@ namespace BP2Projekt.ViewModels
                         ListaIgre.Add(new IgraModel()
                         {
                             ID_Igra = Convert.ToInt32(s["ID_igra"].ToString()),
-                            Naziv = s["Naziv"].ToString()
+                            Naziv = s["NazivIgre"].ToString()
                         });
                     }
 
@@ -167,8 +165,7 @@ namespace BP2Projekt.ViewModels
             ID_uloga = parameters.GetValue<int>("idUloga");
 
             ListaIgre = new ObservableCollection<IgraModel>();
-            Uloga = new UlogaModel();
-            Uloga.ID_Uloga = ID_uloga;
+            Uloga = new UlogaModel() { ID_Uloga = -1 };
             Igra = new IgraModel();
             
             UcitajIgre();

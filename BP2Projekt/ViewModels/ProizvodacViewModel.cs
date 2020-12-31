@@ -103,7 +103,6 @@ namespace BP2Projekt.ViewModels
             ID_Proizvodac = parameters.GetValue<int>("idProizvodac");
 
             Proizvodac = new ProizvodacModel() { ID_Proizvodac = -1 };
-            
             UcitajProizvodaca(ID_Proizvodac);
         }
     }

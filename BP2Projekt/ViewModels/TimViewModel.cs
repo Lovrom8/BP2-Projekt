@@ -56,7 +56,7 @@ namespace BP2Projekt.ViewModels
                         return;
 
                     ListaIgraci.Clear();
-                    //var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+
                     foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
                     {
                         ListaIgraci.Add(new IgracModel()
@@ -132,7 +132,7 @@ namespace BP2Projekt.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Neuspješno brisanje u bazi, greška: {ex.Message}");
+                    MessageBox.Show($"Neuspješno brisanje igraca iz tima, greška: {ex.Message}");
                 }
 
                 con.Close();

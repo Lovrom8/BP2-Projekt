@@ -30,10 +30,13 @@ namespace BP2Projekt.ViewModels
             get => organizator;
             set
             {
-                organizator = value;
+                SetProperty(ref organizator, value);
+                
+                if (value == null)
+                    return;
+
                 Liga.FK_Organizator = value.ID_Organizator;
                 Liga.Organizator = value.Naziv;
-                //OnPropertyChanged("Organizator");
             }
         }
 
@@ -42,10 +45,13 @@ namespace BP2Projekt.ViewModels
             get => igra;
             set
             {
-                igra = value;
+                SetProperty(ref igra, value);
+
+                if (value == null)
+                    return;
+
                 Liga.FK_Igra = value.ID_Igra;
                 Liga.Igra = value.Naziv;
-                //OnPropertyChanged("Igra");
             }
         }
 
@@ -81,9 +87,10 @@ namespace BP2Projekt.ViewModels
                         return;
 
                     reader.Read();
-                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+
                     Liga = new LigaModel()
                     {
+                        ID_Liga = ID_Liga,
                         Naziv = reader["NazivLige"].ToString(),
                         Organizator = reader["NazivOrganizatora"].ToString(),
                         FK_Organizator = Convert.ToInt32(reader["FK_organizator"]),
@@ -190,15 +197,15 @@ namespace BP2Projekt.ViewModels
                 SQLiteCommand insertSQL;
 
                 if (Liga.ID_Liga == -1)
-                    insert = @"INSERT INTO Liga (ID_liga, NazivLige, FK_organizator, FK_igra) VALUES (@ID, @Naziv, @FK_Organizator, @FK_Igra)";
+                    insert = @"INSERT INTO Liga (NazivLige, FK_organizator, FK_igra) VALUES (@Naziv, @FK_Organizator, @FK_Igra)";
                 else
                     insert = @"UPDATE Liga SET NazivLige=@Naziv, FK_organizator=@FK_Organizator, FK_igra=@FK_igra WHERE ID_liga=@Id";
 
                 insertSQL = new SQLiteCommand(insert, con);
-                insertSQL.Parameters.AddWithValue("@Id", Organizator.ID_Organizator);
-                insertSQL.Parameters.AddWithValue("@Naziv", Organizator.Naziv);
-                insertSQL.Parameters.AddWithValue("@Osnovan", Organizator.Osnovan);
-                insertSQL.Parameters.AddWithValue("@Drzava", Organizator.Drzava);
+                insertSQL.Parameters.AddWithValue("@Id", Liga.ID_Liga);
+                insertSQL.Parameters.AddWithValue("@Naziv", Liga.Naziv);
+                insertSQL.Parameters.AddWithValue("@FK_Organizator", Liga.FK_Organizator);
+                insertSQL.Parameters.AddWithValue("@FK_Igra", Liga.FK_Igra);
 
                 try
                 {
@@ -219,8 +226,8 @@ namespace BP2Projekt.ViewModels
             ListaLiga = parameters.GetValue<ObservableCollection<LigaModel>>("listaLiga");
             ID_Liga = parameters.GetValue<int>("idLiga");
 
+            Liga = new LigaModel() { ID_Liga = ID_Liga };
             Igra = new IgraModel();
-            Igra.ID_Igra = ID_Liga;
             Organizator = new OrganizatorModel();
 
             ListaIgre = new ObservableCollection<IgraModel>();
@@ -229,6 +236,9 @@ namespace BP2Projekt.ViewModels
             UcitajLigu(ID_Liga);
             UcitajOrganizatore();
             UcitajIgre();
+
+            Igra = ListaIgre.FirstOrDefault(p => p.ID_Igra == Liga.FK_Igra);
+            Organizator = ListaOrganizatori.FirstOrDefault(p => p.ID_Organizator == Liga.FK_Organizator);
         }
     }
 }

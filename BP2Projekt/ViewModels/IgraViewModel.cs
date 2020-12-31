@@ -29,9 +29,12 @@ namespace BP2Projekt.ViewModels
             get => proizvodac;
             set
             {
-                proizvodac = value;
+                SetProperty(ref proizvodac, value);
+
+                if (value == null)
+                    return;
+
                 Igra.FK_Proizvodac = value.ID_Proizvodac;
-               // OnPropertyChanged("Proizvodac");
             }
         }
 
@@ -39,15 +42,10 @@ namespace BP2Projekt.ViewModels
         public ObservableCollection<IgraModel> ListaIgara { get; private set; }
         public int ID_Igra { get; private set; }
 
-        public IgraViewModel(int ID_igra)
+        public IgraViewModel()
         {
             _dodajIliOsvjeziCommand = new DelegateCommand(DodajIliOsvjezi);
             ListaProizvodaci = new ObservableCollection<ProizvodacModel>();
-
-            Igra = new IgraModel() { ID_Igra = -1 };
-
-            UcitajIgru(ID_igra);
-            UcitajProizvodace();
         }
 
         private void UcitajIgru(int ID_igra)
@@ -78,6 +76,12 @@ namespace BP2Projekt.ViewModels
                         MaxIgraca = Convert.ToInt32(reader["MaxIgraca"]),
                         Zanr = reader["Zanr"].ToString(),
                         FK_Proizvodac = Convert.ToInt32(reader["FK_proizvodac"])
+                    };
+
+                    Proizvodac = new ProizvodacModel()
+                    {
+                        ID_Proizvodac = Igra.FK_Proizvodac,
+                        Naziv = reader["NazivProizvodaca"].ToString()
                     };
                 }
                 catch (Exception ex)
@@ -164,7 +168,12 @@ namespace BP2Projekt.ViewModels
             ListaIgara = parameters.GetValue<ObservableCollection<IgraModel>>("listaIgara");
             ID_Igra = parameters.GetValue<int>("idIgra");
 
+            Igra = new IgraModel() { ID_Igra = -1 };
+
+            UcitajProizvodace();
             UcitajIgru(ID_Igra);
+
+            Proizvodac = ListaProizvodaci.FirstOrDefault(p => p.ID_Proizvodac == Igra.FK_Proizvodac);
         }
     }
 }

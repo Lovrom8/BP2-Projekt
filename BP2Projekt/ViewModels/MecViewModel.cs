@@ -34,9 +34,9 @@ namespace BP2Projekt.ViewModels
             get => _timA;
             set
             {
-                _timA = value;
+                SetProperty(ref _timA, value);
+
                 TimA.Igraci = new ObservableCollection<IgracModel>(IzvadiIgrace(value.ID_Tim));
-                //OnPropertyChanged("TimA");
             }
         }
         public TimModel TimB
@@ -44,9 +44,9 @@ namespace BP2Projekt.ViewModels
             get => _timB;
             set
             {
-                _timB = value;
+                SetProperty(ref _timB, value);
+
                 TimB.Igraci = new ObservableCollection<IgracModel>(IzvadiIgrace(value.ID_Tim));
-                //OnPropertyChanged("TimB");
             }
         }
 
@@ -160,7 +160,7 @@ namespace BP2Projekt.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Neuspješno povezivanje na bazu, greška: {ex.Message}");
+                MessageBox.Show($"Neuspješno čitanje igrača iz baze, greška: {ex.Message}");
             }
 
             return igraci;
