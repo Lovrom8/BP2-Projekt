@@ -20,6 +20,13 @@ namespace BP2Projekt
         private string timNaziv;
         private bool jeOdabran;
         private bool aktivan;
+        private string igrac_od;
+        private string trener_od;
+        private string ime;
+        private string prezime;
+        private int idTim;
+        private string tim;
+        private int starost;
 
         public int ID_Sudionik
         {
@@ -46,7 +53,7 @@ namespace BP2Projekt
                 NotifyPropertyChanged();
             }
         }
-        public string Drzava 
+        public string Drzava
         {
             get => drzava;
             set
@@ -117,6 +124,104 @@ namespace BP2Projekt
                 if (aktivan == value)
                     return;
                 aktivan = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string IgracOd
+        {
+            get => igrac_od;
+            set
+            {
+                if (igrac_od == value)
+                    return;
+
+                igrac_od = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string TrenerOd
+        {
+            get => trener_od;
+            set
+            {
+                if (trener_od == value)
+                    return;
+
+                trener_od = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Ime
+        {
+            get => ime;
+            set
+            {
+                if (ime == value)
+                    return;
+
+                ime = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Prezime
+        {
+            get => prezime; 
+            set 
+            {
+                if (prezime == value)
+                    return;
+
+                prezime = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int FK_Tim
+        {
+            get => idTim;
+            set
+            {
+                if (idTim == value)
+                    return;
+
+                idTim = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Tim
+        {
+            get => tim;
+            set
+            {
+                if (tim == value)
+                    return;
+
+                tim = value;
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int Starost
+        {
+            get => starost;
+            set
+            {
+                if (starost == value)
+                    return;
+
+                starost = value;
 
                 NotifyPropertyChanged();
             }

@@ -18,7 +18,13 @@ namespace BP2Projekt.ViewModels
     {
         private readonly DelegateCommand _dodajIliOsvjeziCommand;
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;
-        public ProizvodacModel Proizvodac { get; set; }
+
+        private ProizvodacModel proizvodac;
+        public ProizvodacModel Proizvodac 
+        { 
+            get => proizvodac;
+            set => SetProperty(ref proizvodac, value);
+        }
         public ObservableCollection<ProizvodacModel> ListaProizvodaca { get; private set; }
         public int ID_Proizvodac { get; private set; }
 
@@ -43,17 +49,16 @@ namespace BP2Projekt.ViewModels
                 {
                     var reader = selectSQL.ExecuteReader();
 
+                    reader.Read();
                     if (!reader.HasRows)
                         return;
-
+   
                     Proizvodac = new ProizvodacModel()
                     {
                         ID_Proizvodac = Convert.ToInt32(reader["ID_proizvodac"]),
                         Drzava = reader["Drzava"].ToString(),
                         Naziv = reader["NazivProizvodaca"].ToString()
                     };
-
-                    reader.Read();
                 }
                 catch (Exception ex)
                 {
@@ -74,7 +79,7 @@ namespace BP2Projekt.ViewModels
                 SQLiteCommand insertSQL;
 
                 if (Proizvodac.ID_Proizvodac == -1)
-                    insert = @"INSERT INTO Proizvodac (ID_proizvodac, Naziv, Drzava, FK_igra) VALUES (@ID, @Naziv, @Drzava)";
+                    insert = @"INSERT INTO Proizvodac (NazivProizvodaca, Drzava) VALUES (@Naziv, @Drzava)";
                 else
                     insert = @"UPDATE Proizvodac SET NazivProizvodaca=@Naziv, Drzava=@Drzava WHERE ID_proizvodac=@Id";
 
@@ -87,6 +92,11 @@ namespace BP2Projekt.ViewModels
                 {
                     insertSQL.ExecuteNonQuery();
                     MessageBox.Show("Proizvodac dodan u bazu!", "Dodano!");
+
+                    if (Proizvodac.ID_Proizvodac == -1)
+                        ListaProizvodaca.Add(Proizvodac);
+                    else
+                        ListaProizvodaca[ListaProizvodaca.IndexOf(ListaProizvodaca.FirstOrDefault(o => o.ID_Proizvodac == ID_Proizvodac))] = Proizvodac;
                 }
                 catch (Exception ex)
                 {

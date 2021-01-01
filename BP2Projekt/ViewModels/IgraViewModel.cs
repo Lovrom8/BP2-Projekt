@@ -35,6 +35,7 @@ namespace BP2Projekt.ViewModels
                     return;
 
                 Igra.FK_Proizvodac = value.ID_Proizvodac;
+                Igra.Proizvodac = value.Naziv;
             }
         }
 
@@ -143,7 +144,7 @@ namespace BP2Projekt.ViewModels
                     insert = @"UPDATE Igra SET NazivIgre=@Naziv, Zanr=@Zanr, FK_proizvodac=@FK_Proizvodac, MaxIgraca=@MaxIgraca WHERE ID_igra=@Id";
 
                 insertSQL = new SQLiteCommand(insert, con);
-                insertSQL.Parameters.AddWithValue("@Id", Proizvodac.ID_Proizvodac);
+                insertSQL.Parameters.AddWithValue("@Id", ID_Igra);
                 insertSQL.Parameters.AddWithValue("@Naziv", Igra.Naziv);
                 insertSQL.Parameters.AddWithValue("@FK_Proizvodac", Igra.FK_Proizvodac);
                 insertSQL.Parameters.AddWithValue("@Zanr", Igra.Zanr);
@@ -153,6 +154,11 @@ namespace BP2Projekt.ViewModels
                 {
                     insertSQL.ExecuteNonQuery();
                     MessageBox.Show("Igra dodana u bazu!", "Dodano!");
+
+                    if (ID_Igra == -1)
+                        ListaIgara.Add(Igra);
+                    else
+                        ListaIgara[ListaIgara.IndexOf(ListaIgara.FirstOrDefault(o => o.ID_Igra == ID_Igra))] = Igra;
                 }
                 catch (Exception ex)
                 {

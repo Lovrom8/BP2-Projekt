@@ -31,9 +31,6 @@
         <Label Content="Naziv:" Grid.Column="1" Grid.Row="1" Height="27" />
         <TextBox Name="tbNaziv" Grid.Column="3" Grid.Row="1" Height="27" Text="{Binding Path=Proizvodac.Naziv}" />
         
-        <Label Content="Osnovan u:" Grid.Column="1" Grid.Row="2" Height="27" />
-        <TextBox Name="tbOsnovan" Grid.Column="3" Grid.Row="2" Height="27" HorizontalAlignment="Left" Width="50" Text="{Binding Path=Proizvodac.Osnovan}" />
-        
         <Label Content="Država:" Grid.Column="1" Grid.Row="3" Height="27" />
         <TextBox Name="tbDrzava" Grid.Column="3" Grid.Row="3" Height="27" HorizontalAlignment="Left" Width="100" Text="{Binding Path=Proizvodac.Drzava}" />
         

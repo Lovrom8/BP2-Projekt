@@ -91,9 +91,9 @@ namespace BP2Projekt
                 SQLiteCommand insertSQL;
 
                 if (Organizacija.ID_Organizacija == -1)
-                    insert = @"INSERT INTO Organizacija (NazivOrganizacije, Osnovana, Drzava) VALUES (@Naziv, @Osnovana, @Drzava)";
+                    insert = @"INSERT INTO Organizacija (NazivOrganizacije, Osnovana, Drzava, BrojTimova) VALUES (@Naziv, @Osnovana, @Drzava, 0)";
                 else
-                    insert = @"UPDATE Organizacija SET NazivProizvodaca=@Naziv, Osnovana=@Osnovana, Drzava=@Drzava WHERE ID_organizacija=@Id";
+                    insert = @"UPDATE Organizacija SET NazivOrganizacije=@Naziv, Osnovana=@Osnovana, Drzava=@Drzava WHERE ID_org=@Id";
 
                 insertSQL = new SQLiteCommand(insert, con);
 
@@ -106,6 +106,11 @@ namespace BP2Projekt
                 {
                     insertSQL.ExecuteNonQuery();
                     MessageBox.Show("Organizacija dodana u bazu!", "Dodano!");
+
+                    if (Organizacija.ID_Organizacija == -1)
+                        ListaOrganizacija.Add(Organizacija);
+                    else
+                        ListaOrganizacija[ListaOrganizacija.IndexOf(ListaOrganizacija.FirstOrDefault(o =>o.ID_Organizacija == ID_Org))] = Organizacija;
                 }
                 catch (Exception ex)
                 {

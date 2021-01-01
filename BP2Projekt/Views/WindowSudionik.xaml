@@ -40,26 +40,24 @@
 
         <RadioButton  Style="{StaticResource MaterialDesignRadioButton}" Name="radioIgrac" IsChecked="{Binding Path=RadioModel.JeIgrac, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Left" Content="Igrač"/>
         <RadioButton  Style="{StaticResource MaterialDesignRadioButton}" Name="radioTrener" IsChecked="{Binding Path=RadioModel.JeTrener, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Right" Content="Trener"/>
-
-        <Label Content="Nick:" Grid.Column="1" Grid.Row="2" />
-        <TextBox Name="tbNick" Grid.Column="3" Grid.Row="2" Height="20" Text="{Binding Path=Sudionik.Nick}"/>
-
-        <Label Content="Organizacija:" Grid.Column="1" Grid.Row="3" />
-        <ComboBox Name="comboOrganizacija" Grid.Column="3" Grid.Row="3" Height="20" 
+        
+        <Label Content="Nick:" Grid.Column="1" Grid.Row="2" Height="30" />
+        <TextBox Name="tbNick" Grid.Column="3" Grid.Row="2" Height="30" Text="{Binding Path=Sudionik.Nick}"/>
+       
+        <Label Content="Organizacija:" Grid.Column="1" Grid.Row="3" Height="30" />
+        <ComboBox Name="comboOrganizacija" Grid.Column="3" Grid.Row="3" Height="30" 
                   ItemsSource="{Binding Path=ListaOrganizacije}" SelectedItem="{Binding Path=Organizacija, Mode=TwoWay}" DisplayMemberPath="Naziv"/>
-
-        <Label Content="Igra:" Grid.Column="1" Grid.Row="4" />
-        <ComboBox Name="comboIgra" Grid.Column="3" Grid.Row="4" Height="20" 
+       
+        <Label Content="Igra:" Grid.Column="1" Grid.Row="4" Height="30" />
+        <ComboBox Name="comboIgra" Grid.Column="3" Grid.Row="4" Height="30" 
                   ItemsSource="{Binding Path=ListaIgre}" SelectedItem="{Binding Path=Igra, Mode=TwoWay}" DisplayMemberPath="Naziv"/>
-
-        <Label Content="Uloga:" Grid.Column="1" Grid.Row="5" 
-                Visibility="{Binding IsChecked,ElementName=radioIgrac, Converter={StaticResource b2v}}" />
-        <ComboBox Name="comboUloga" Grid.Column="3" Grid.Row="5" Height="20" 
+        
+        <Label Content="Uloga:" Grid.Column="1" Grid.Row="5" Height="30" Visibility="{Binding IsChecked,ElementName=radioIgrac, Converter={StaticResource b2v}}" />
+        <ComboBox Name="comboUloga" Grid.Column="3" Grid.Row="5" Height="30" 
                   ItemsSource="{Binding Path=ListaUloge}" SelectedItem="{Binding Path=Uloga}" DisplayMemberPath="Naziv"
                   Visibility="{Binding IsChecked,ElementName=radioIgrac, Converter={StaticResource b2v}}" />
-
-        <Button Name="btnOsvjezi" Content="Dodaj" HorizontalAlignment="Right"
-                Margin="3" MinWidth="80" Grid.Column="3" Grid.Row="7" 
+   
+        <Button Name="btnOsvjezi" Content="Dodaj" HorizontalAlignment="Right" Height="30" Margin="3" MinWidth="80" Grid.Column="3" Grid.Row="7" 
                 Command="{Binding Path=DodajSudionikaCommand}"/>
     </Grid>
 </UserControl>

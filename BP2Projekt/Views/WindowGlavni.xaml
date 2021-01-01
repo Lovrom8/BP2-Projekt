@@ -46,6 +46,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Naziv}" Header="Naziv" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                             <DataGridTextColumn Binding="{Binding Organizator}" Header="Organizator" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                            <DataGridTextColumn Binding="{Binding Igra}" Header="Igra" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
@@ -121,7 +122,7 @@
                 <StackPanel>
                     <Button ToolTip="Dodaj sudionike" Content="Sud" Command="{Binding OtvoriSudionikaCommand}" />
                     <Button ToolTip="Dodaj timove" Content="Tim" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Command="{Binding OtvoriTimCommand}" />
-                    <Button ToolTip="Dodaj organizatora" Content="Meč" Command="{Binding OtvoriOrganizatoraCommand}">
+                    <Button ToolTip="Dodaj organizatora" Content="Meč" Command="{Binding OtvoriMecCommand}">
                         <!-- mix up the colours by bringing in a named palette (see merged dictionaries at top) -->
                         <Button.Background>
                             <SolidColorBrush Color="{StaticResource GreenPrimary500}" />

@@ -20,7 +20,7 @@ namespace BP2Projekt.ViewModels
         public ICommand DodajIliOsvjeziCommand => _dodajIliOsvjeziCommand;
         public OrganizatorModel Organizator { get; set; }
         public ObservableCollection<OrganizatorModel> ListaOrganizatora { get; private set; }
-        public int ID_organizatora { get; private set; }
+        public int ID_Organizatora { get; private set; }
 
         public OrganizatorViewModel()
         {
@@ -89,6 +89,11 @@ namespace BP2Projekt.ViewModels
                 {
                     insertSQL.ExecuteNonQuery();
                     MessageBox.Show("Organizator dodan u bazu!", "Dodano!");
+
+                    if (Organizator.ID_Organizator == -1)
+                        ListaOrganizatora.Add(Organizator);
+                    else
+                        ListaOrganizatora[ListaOrganizatora.IndexOf(ListaOrganizatora.FirstOrDefault(o => o.ID_Organizator == ID_Organizatora))] = Organizator;
                 }
                 catch (Exception ex)
                 {
@@ -102,10 +107,10 @@ namespace BP2Projekt.ViewModels
         public override void OnDialogOpened(IDialogParameters parameters)
         {
             ListaOrganizatora = parameters.GetValue<ObservableCollection<OrganizatorModel>>("listaOrganizatora");
-            ID_organizatora = parameters.GetValue<int>("idOrganizator");
+            ID_Organizatora = parameters.GetValue<int>("idOrganizator");
 
-            Organizator = new OrganizatorModel() { ID_Organizator = ID_organizatora};
-            UcitajOrganizatora(ID_organizatora);
+            Organizator = new OrganizatorModel() { ID_Organizator = ID_Organizatora};
+            UcitajOrganizatora(ID_Organizatora);
         }
     }
 }

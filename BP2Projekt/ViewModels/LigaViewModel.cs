@@ -211,6 +211,11 @@ namespace BP2Projekt.ViewModels
                 {
                     insertSQL.ExecuteNonQuery();
                     MessageBox.Show("Liga dodana u bazu!", "Dodano!");
+
+                    if (ID_Liga == -1)
+                        ListaLiga.Add(Liga);
+                    else
+                        ListaLiga[ListaLiga.IndexOf(ListaLiga.FirstOrDefault(o => o.ID_Liga == ID_Liga))] = Liga;
                 }
                 catch (Exception ex)
                 {

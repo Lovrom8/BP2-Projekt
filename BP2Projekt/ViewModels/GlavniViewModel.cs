@@ -300,7 +300,7 @@ namespace BP2Projekt.ViewModels
         {
             _dialogService.ShowDialog("OrganizatorProzor", new DialogParameters
             {
-                { "listaOrganizator", ListaOrganizatora},
+                { "listaOrganizatora", ListaOrganizatora},
                 { "idOrganizator", organizatorID}
             }, r => { });
         }
@@ -618,7 +618,6 @@ namespace BP2Projekt.ViewModels
                         return;
 
                     ListaUloga.Clear();
-                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
 
                     foreach (DbDataRecord s in reader.Cast<DbDataRecord>())
                     {

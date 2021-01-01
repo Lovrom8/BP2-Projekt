@@ -70,7 +70,7 @@ namespace BP2Projekt.ViewModels
                     con.Open();
 
                     var selectSQL = new SQLiteCommand(@"SELECT m.*, t1.ID_tim AS ID_A, t2.ID_tim AS ID_B,
-                                                        t1.Naziv AS NazivA, t2.Naziv AS NazivB
+                                                        t1.NazivTima AS NazivA, t2.NazivTima AS NazivB
                                                         FROM Mec m 
                                                         JOIN Tim t1 ON t1.ID_tim = m.FK_timA 
                                                         JOIN Tim t2 ON t2.ID_tim = m.FK_timB
@@ -119,14 +119,10 @@ namespace BP2Projekt.ViewModels
         public Visibility Vidljivost
         {
             get => _vidljivost;
-            set
-            {
-                _vidljivost = value;
-               // OnPropertyChanged("Vidljivost");
-            }
+            set => SetProperty(ref _vidljivost, value);
         }
 
-        public ObservableCollection<OrganizacijaModel> ListaMecevi { get; private set; }
+        public ObservableCollection<MecModel> ListaMecevi { get; private set; }
         public int ID_Mec { get; private set; }
 
         private ObservableCollection<IgracModel> IzvadiIgrace(int timID)
@@ -174,7 +170,7 @@ namespace BP2Projekt.ViewModels
                 {
                     con.Open();
 
-                    var selectSQL = new SQLiteCommand(@"SELECT ID_tim, Naziv FROM Tim", con);
+                    var selectSQL = new SQLiteCommand(@"SELECT ID_tim, NazivTima FROM Tim", con);
 
                     var reader = selectSQL.ExecuteReader();
 
@@ -189,7 +185,7 @@ namespace BP2Projekt.ViewModels
                         ListaTimovi.Add(new TimModel()
                         {
                             ID_Tim = Convert.ToInt32(s["ID_tim"].ToString()),
-                            Naziv = s["Naziv"].ToString()
+                            Naziv = s["NazivTima"].ToString()
                         });
                     }
 
@@ -206,34 +202,39 @@ namespace BP2Projekt.ViewModels
 
         private void SpremiPromjene()
         {
-            try
+
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+                con.Open();
+
+                SQLiteCommand updateSQL;
+                string sqlStr;
+
+                if (Mec.ID_Mec != -1)
+                    sqlStr = @"UPDATE Mec SET FK_timA = @TimAId, FK_timB = @TimBId WHERE ID_mec=@MecID";
+                else
+                    sqlStr = @"INSERT INTO Mec (FK_timA, FK_timB) VALUES (@TimAId, @TimBId)";
+
+                updateSQL = new SQLiteCommand(sqlStr, con);
+                updateSQL.Parameters.AddWithValue("@TimAId", TimA.ID_Tim);
+                updateSQL.Parameters.AddWithValue("@TimBId", TimB.ID_Tim);
+                updateSQL.Parameters.AddWithValue("@MecID", Mec.ID_Mec);
+
+                try
                 {
-                    con.Open();
-
-                    SQLiteCommand updateSQL;
-                    string sqlStr;
-
-                    if (Mec.ID_Mec != -1)
-                        sqlStr = @"UPDATE Mec SET FK_timA = @TimAId, FK_timB = @TimBId WHERE ID_mec=@MecID";
-                    else
-                        sqlStr = @"INSERT INTO Mec (FK_timA, FK_timB) VALUES (@TimAId, @TimBId)";
-
-                    updateSQL = new SQLiteCommand(sqlStr, con);
-                    updateSQL.Parameters.AddWithValue("@TimAId", TimA.ID_Tim);
-                    updateSQL.Parameters.AddWithValue("@TimBId", TimB.ID_Tim);
-                    updateSQL.Parameters.AddWithValue("@MecID", Mec.ID_Mec);
-
                     updateSQL.ExecuteNonQuery();
 
-                    con.Close();
+                    if (ID_Mec == -1)
+                        ListaMecevi.Add(Mec);
+                    else
+                        ListaMecevi[ListaMecevi.IndexOf(ListaMecevi.FirstOrDefault(o => o.ID_Mec == ID_Mec))] = Mec;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno spremanje timova, greška: {ex.Message}");
                 }
 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Neuspješno spremanje timova, greška: {ex.Message}");
+                con.Close();
             }
 
             Vidljivost = Visibility.Collapsed;
@@ -241,7 +242,7 @@ namespace BP2Projekt.ViewModels
 
         public override void OnDialogOpened(IDialogParameters parameters)
         {
-            ListaMecevi = parameters.GetValue<ObservableCollection<OrganizacijaModel>>("listaMec");
+            ListaMecevi = parameters.GetValue<ObservableCollection<MecModel>>("listaMec");
             ID_Mec = parameters.GetValue<int>("idMec");
 
             ListaTimovi = new ObservableCollection<TimModel>();

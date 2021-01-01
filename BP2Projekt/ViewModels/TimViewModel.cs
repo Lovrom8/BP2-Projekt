@@ -24,9 +24,10 @@ namespace BP2Projekt.ViewModels
         public ICommand ObrisiIgracaCommand => _obirisiIgracaCmd;
 
         public IgracModel OdabraniIgrac { get; set; }
+        public IgracModel OdabraniOstaliIgrac { get; set; }
         public ObservableCollection<IgracModel> ListaIgraci { get; set; }
         public ObservableCollection<IgracModel> OstaliIgraci { get; set; }
-        public ObservableCollection<OrganizatorModel> ListaTimova { get; private set; }
+        public ObservableCollection<TimModel> ListaTimova { get; private set; }
         public int ID_tim { get; private set; }
 
         public TimViewModel()
@@ -45,7 +46,7 @@ namespace BP2Projekt.ViewModels
             {
                 con.Open();
 
-                var selectSQL = new SQLiteCommand(@"SELECT * FROM Igrac JOIN Uloga ON Igrac.FK_uloga=Uloga.ID_uloga WHERE FK_tim=@Id", con);
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Sudionik S JOIN Igrac I ON I.FK_sudionik = S.ID_sudionik JOIN Uloga U ON I.FK_uloga=U.ID_uloga WHERE FK_tim=@Id", con);
                 selectSQL.Parameters.AddWithValue("@Id", TimID);
 
                 try
@@ -61,8 +62,8 @@ namespace BP2Projekt.ViewModels
                     {
                         ListaIgraci.Add(new IgracModel()
                         {
-                            ID_Sudionik = Convert.ToInt32(s["ID_igrac"].ToString()),
-                            Nick = s["Nick"].ToString(),
+                            ID_Sudionik = Convert.ToInt32(s["ID_sudionik"].ToString()),
+                            Nick = s["Nadimak"].ToString(),
                             Drzava = s["Drzava"].ToString(),
                             UlogaNaziv = s["NazivUloge"].ToString(),
                             ID_Uloga = Convert.ToInt32(s["FK_uloga"].ToString())
@@ -74,15 +75,16 @@ namespace BP2Projekt.ViewModels
                     MessageBox.Show($"Neuspješno čitanje igrača iz baze, greška: {ex.Message}");
                 }
 
-                //TODO: zavrsi
-                selectSQL = new SQLiteCommand(@"SELECT * FROM Igrac WHERE NOT FK_tim=@Id", con);
+                selectSQL = new SQLiteCommand(@"SELECT * FROM Sudionik S 
+                                                JOIN Igrac I ON I.FK_sudionik = S.ID_sudionik 
+                                                JOIN Uloga U ON I.FK_uloga=U.ID_uloga WHERE S.FK_tim != @Id"
+                                                , con);
                 selectSQL.Parameters.AddWithValue("@Id", TimID);
 
                 try
                 {
                     var reader = selectSQL.ExecuteReader();
 
-                    reader.Read();
                     if (!reader.HasRows)
                         return;
 
@@ -92,9 +94,10 @@ namespace BP2Projekt.ViewModels
                     {
                         OstaliIgraci.Add(new IgracModel()
                         {
-                            ID_Sudionik = Convert.ToInt32(s["ID_igrac"].ToString()),
-                            Nick = s["Nick"].ToString(),
-                            Drzava = s["Drzava"].ToString()
+                            ID_Sudionik = Convert.ToInt32(s["ID_sudionik"].ToString()),
+                            Nick = s["Nadimak"].ToString(),
+                            Drzava = s["Drzava"].ToString(),
+                            UlogaNaziv = s["NazivUloge"].ToString()
                         });
                     }
                 }
@@ -109,7 +112,31 @@ namespace BP2Projekt.ViewModels
 
         private void DodajIgraca()
         {
+            if (OdabraniOstaliIgrac == null)
+                return;
 
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                con.Open();
+
+                var updateSQL = new SQLiteCommand(@"UPDATE Sudionik SET FK_tim = @Id_tim WHERE ID_sudionik=@Id", con);
+                updateSQL.Parameters.AddWithValue("@Id", OdabraniOstaliIgrac.ID_Sudionik);
+                updateSQL.Parameters.AddWithValue("@Id_tim", ID_tim);
+
+                try
+                {
+                    updateSQL.ExecuteNonQuery();
+
+                    ListaIgraci.Add(OdabraniOstaliIgrac);
+                    OstaliIgraci.Remove(OstaliIgraci.FirstOrDefault(igr => igr.ID_Sudionik == OdabraniOstaliIgrac.ID_Sudionik)); // Obrisi s liste igraca bez tima 
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno dodavanje igrača u tim, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
         }
 
         private void ObrisiIgraca()
@@ -121,13 +148,14 @@ namespace BP2Projekt.ViewModels
             {
                 con.Open();
 
-                var updateSQL = new SQLiteCommand(@"UPDATE Igrac SET FK_tim = NULL WHERE ID_igrac=@Id", con);
+                var updateSQL = new SQLiteCommand(@"UPDATE Sudionik SET FK_tim = NULL WHERE ID_sudionik=@Id", con);
                 updateSQL.Parameters.AddWithValue("@Id", OdabraniIgrac.ID_Sudionik);
 
                 try
                 {
                     updateSQL.ExecuteNonQuery(); // "Obrisi" iz baze
 
+                    OstaliIgraci.Add(OdabraniIgrac);
                     ListaIgraci.Remove(ListaIgraci.FirstOrDefault(igr => igr.ID_Sudionik == OdabraniIgrac.ID_Sudionik)); // Obrisi s liste 
                 }
                 catch (Exception ex)
@@ -141,7 +169,7 @@ namespace BP2Projekt.ViewModels
 
         public override void OnDialogOpened(IDialogParameters parameters)
         {
-            ListaTimova = parameters.GetValue<ObservableCollection<OrganizatorModel>>("listaTimova");
+            ListaTimova = parameters.GetValue<ObservableCollection<TimModel>>("listaTimova");
             ID_tim = parameters.GetValue<int>("idTim");
 
             PopuniListuIgraca(ID_tim);
