@@ -95,7 +95,8 @@ namespace BP2Projekt.ViewModels
                         Organizator = reader["NazivOrganizatora"].ToString(),
                         FK_Organizator = Convert.ToInt32(reader["FK_organizator"]),
                         Igra = reader["NazivIgre"].ToString(),
-                        FK_Igra = Convert.ToInt32(reader["FK_igra"])
+                        FK_Igra = Convert.ToInt32(reader["FK_igra"]),
+                        LAN = Convert.ToBoolean(reader["LAN"])
                     };
 
                     Igra.ID_Igra = Liga.FK_Igra;
@@ -103,7 +104,6 @@ namespace BP2Projekt.ViewModels
 
                     Organizator.ID_Organizator = Liga.FK_Organizator;
                     Organizator.Naziv = Liga.Organizator;
-
                 }
                 catch (Exception ex)
                 {
@@ -197,15 +197,16 @@ namespace BP2Projekt.ViewModels
                 SQLiteCommand insertSQL;
 
                 if (Liga.ID_Liga == -1)
-                    insert = @"INSERT INTO Liga (NazivLige, FK_organizator, FK_igra) VALUES (@Naziv, @FK_Organizator, @FK_Igra)";
+                    insert = @"INSERT INTO Liga (NazivLige, FK_organizator, FK_igra, LAN) VALUES (@Naziv, @FK_Organizator, @FK_Igra, @LAN)";
                 else
-                    insert = @"UPDATE Liga SET NazivLige=@Naziv, FK_organizator=@FK_Organizator, FK_igra=@FK_igra WHERE ID_liga=@Id";
+                    insert = @"UPDATE Liga SET NazivLige=@Naziv, FK_organizator=@FK_Organizator, FK_igra=@FK_igra, LAN=@LAN WHERE ID_liga=@Id";
 
                 insertSQL = new SQLiteCommand(insert, con);
                 insertSQL.Parameters.AddWithValue("@Id", Liga.ID_Liga);
                 insertSQL.Parameters.AddWithValue("@Naziv", Liga.Naziv);
                 insertSQL.Parameters.AddWithValue("@FK_Organizator", Liga.FK_Organizator);
                 insertSQL.Parameters.AddWithValue("@FK_Igra", Liga.FK_Igra);
+                insertSQL.Parameters.AddWithValue("@LAN", Liga.LAN);
 
                 try
                 {

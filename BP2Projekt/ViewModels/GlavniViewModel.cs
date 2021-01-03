@@ -291,7 +291,7 @@ namespace BP2Projekt.ViewModels
         {
             _dialogService.ShowDialog("SudionikProzor", new DialogParameters
             {
-                { "listaSudionik", ListaSudionici},
+                { "listaSudionika", ListaSudionici},
                 { "idSudionik", sudionikID}
             }, r => { });
         }
@@ -346,9 +346,13 @@ namespace BP2Projekt.ViewModels
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
-                var selectSQL = new SQLiteCommand(@"SELECT M.*, T1.NazivTima AS T1_Naziv, T2.NazivTima AS T2_Naziv FROM Mec M
+                var selectSQL = new SQLiteCommand(@"SELECT M.*, P.*, L.*, I.*, T1.NazivTima AS T1_Naziv, T2.NazivTima AS T2_Naziv FROM Mec M
                                                     JOIN Tim AS T1 ON T1.ID_tim = M.FK_TimA
-                                                    JOIN Tim AS T2 ON T2.ID_tim = M.FK_TimB", con);
+                                                    JOIN Tim AS T2 ON T2.ID_tim = M.FK_TimB
+                                                    JOIN PobjednikMeca P ON FK_mec = M.ID_mec
+                                                    JOIN Liga L ON L.ID_liga = M.FK_liga
+                                                    JOIN Igra I ON I.ID_igra = L.FK_igra
+                                                    ", con);
 
                 con.Open();
 
@@ -373,7 +377,10 @@ namespace BP2Projekt.ViewModels
                             RezultatB = Convert.ToInt32(s["RezultatB"]),
                             FK_Pobjednik = Convert.ToInt32(s["FK_Pobjednik"]),
                             TimA = s["T1_Naziv"].ToString(),
-                            TimB = s["T2_Naziv"].ToString()
+                            TimB = s["T2_Naziv"].ToString(),
+                            Datum = DateTime.Parse(s["Datum"].ToString()),
+                            Igra = s["NazivIgre"].ToString(),
+                            Liga = s["NazivLige"].ToString()
                         });
                     }
 

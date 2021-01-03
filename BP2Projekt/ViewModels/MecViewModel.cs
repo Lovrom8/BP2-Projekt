@@ -28,6 +28,8 @@ namespace BP2Projekt.ViewModels
         private TimModel _timB;
         private TimModel _timA;
 
+        public TimABRadioModel RadioModel { get; set; }
+
         public MecModel Mec { get; set; }
         public TimModel TimA
         {
@@ -56,6 +58,7 @@ namespace BP2Projekt.ViewModels
         {
             _promjeniTimoveCommand = new DelegateCommand(PromjeniTimove);
             _spremiPromjene = new DelegateCommand(SpremiPromjene);
+            RadioModel = new TimABRadioModel();
         }
 
         private void PopuniInfo(int MecID)
@@ -69,12 +72,13 @@ namespace BP2Projekt.ViewModels
                 {
                     con.Open();
 
-                    var selectSQL = new SQLiteCommand(@"SELECT m.*, t1.ID_tim AS ID_A, t2.ID_tim AS ID_B,
+                    var selectSQL = new SQLiteCommand(@"SELECT m.*, p.FK_pobjednik, t1.ID_tim AS ID_A, t2.ID_tim AS ID_B,
                                                         t1.NazivTima AS NazivA, t2.NazivTima AS NazivB
                                                         FROM Mec m 
                                                         JOIN Tim t1 ON t1.ID_tim = m.FK_timA 
                                                         JOIN Tim t2 ON t2.ID_tim = m.FK_timB
-                                                        WHERE m.ID_mec=@Id ", con);
+                                                        JOIN PobjednikMeca p ON p.FK_mec = m.ID_mec
+                                                        WHERE m.ID_mec=@Id", con);
                     selectSQL.Parameters.AddWithValue("@Id", MecID);
 
                     var reader = selectSQL.ExecuteReader();
@@ -90,7 +94,8 @@ namespace BP2Projekt.ViewModels
                         RezultatB = Convert.ToInt32(reader["rezultatB"]),
                         FK_Pobjednik = Convert.ToInt32(reader["FK_pobjednik"]),
                         FK_TimA = Convert.ToInt32(reader["FK_timA"]),
-                        FK_TimB = Convert.ToInt32(reader["FK_timB"])
+                        FK_TimB = Convert.ToInt32(reader["FK_timB"]),
+                        Datum = DateTime.Parse(reader["Datum"].ToString())
                     };
 
                     TimA = new TimModel()
@@ -202,7 +207,6 @@ namespace BP2Projekt.ViewModels
 
         private void SpremiPromjene()
         {
-
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
                 con.Open();
@@ -210,15 +214,18 @@ namespace BP2Projekt.ViewModels
                 SQLiteCommand updateSQL;
                 string sqlStr;
 
-                if (Mec.ID_Mec != -1)
-                    sqlStr = @"UPDATE Mec SET FK_timA = @TimAId, FK_timB = @TimBId WHERE ID_mec=@MecID";
+                if (Mec.ID_Mec != -1) // Popuni tablicu Mec
+                    sqlStr = @"UPDATE Mec SET FK_timA = @TimAId, FK_timB = @TimBId, Datum = @Datum, RezultatA = @RezA, RezultatB = @RezB WHERE ID_mec=@MecID";
                 else
-                    sqlStr = @"INSERT INTO Mec (FK_timA, FK_timB) VALUES (@TimAId, @TimBId)";
+                    sqlStr = @"INSERT INTO Mec (FK_timA, FK_timB, Datum, RezultatA, RezultatB) VALUES (@TimAId, @TimBId, @Datum, @RezA, @RezB)";
 
                 updateSQL = new SQLiteCommand(sqlStr, con);
                 updateSQL.Parameters.AddWithValue("@TimAId", TimA.ID_Tim);
                 updateSQL.Parameters.AddWithValue("@TimBId", TimB.ID_Tim);
                 updateSQL.Parameters.AddWithValue("@MecID", Mec.ID_Mec);
+                updateSQL.Parameters.AddWithValue("@Datum", Mec.Datum.GetSQLiteDateTime());
+                updateSQL.Parameters.AddWithValue("@RezA", Mec.RezultatA);
+                updateSQL.Parameters.AddWithValue("@RezB", Mec.RezultatB);
 
                 try
                 {
@@ -228,6 +235,29 @@ namespace BP2Projekt.ViewModels
                         ListaMecevi.Add(Mec);
                     else
                         ListaMecevi[ListaMecevi.IndexOf(ListaMecevi.FirstOrDefault(o => o.ID_Mec == ID_Mec))] = Mec;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno spremanje timova, greška: {ex.Message}");
+                    con.Close();
+                    return;
+                }
+
+                if (Mec.ID_Mec != -1) //Popuni tablicu PobjednikMeca
+                    sqlStr = @"UPDATE PobjednikMeca SET FK_pobjednik=@PobjednikId WHERE FK_mec=@MecID";
+                else
+                    sqlStr = @"INSERT INTO PobjednikMeca (FK_mec, FK_pobjednik) VALUES (@MecId, @PobjednikId)";
+
+                updateSQL = new SQLiteCommand(sqlStr, con);
+                if (RadioModel.PobjednikA)
+                    updateSQL.Parameters.AddWithValue("@PobjednikId", TimA.ID_Tim);
+                else
+                    updateSQL.Parameters.AddWithValue("@PobjednikId", TimB.ID_Tim); 
+                updateSQL.Parameters.AddWithValue("@MecId", Mec.ID_Mec);
+
+                try
+                {
+                    updateSQL.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
@@ -242,12 +272,37 @@ namespace BP2Projekt.ViewModels
 
         public override void OnDialogOpened(IDialogParameters parameters)
         {
-            ListaMecevi = parameters.GetValue<ObservableCollection<MecModel>>("listaMec");
+            ListaMecevi = parameters.GetValue<ObservableCollection<MecModel>>("listaMeceva");
             ID_Mec = parameters.GetValue<int>("idMec");
 
             ListaTimovi = new ObservableCollection<TimModel>();
 
             PopuniInfo(ID_Mec);
+        }
+    }
+
+    class TimABRadioModel : BaseViewModel
+    {
+        private bool _pobjednikA = true;
+        public bool PobjednikA
+        {
+            get => _pobjednikA;
+            set
+            {
+                _pobjednikA = value;
+                OnPropertyChanged("RadioTimA");
+            }
+        }
+
+        private bool _pobjednikB = false;
+        public bool PobjednikB
+        {
+            get => _pobjednikB;
+            set
+            {
+                _pobjednikB = value;
+                OnPropertyChanged("RadioTimB");
+            }
         }
     }
 }

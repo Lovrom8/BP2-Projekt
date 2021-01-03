@@ -20,7 +20,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Name="ligaGrid" Background="LightGray">
+    <Grid Name="ligaGrid" Background="LightGray" Height="273">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
             <RowDefinition Height="27" />
@@ -29,7 +29,7 @@
             <RowDefinition Height="27" />
             <RowDefinition Height="28" />
             <RowDefinition Height="28" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="28" />
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
@@ -52,7 +52,10 @@
         <Label Content="Igra:" Grid.Column="1" Grid.Row="5" Height="30" />
         <ComboBox Grid.Column="3" Grid.Row="5" Name="comboIgre" Height="30"
                   ItemsSource="{Binding ListaIgre}" SelectedItem="{Binding Igra}" DisplayMemberPath="Naziv" />
-        <Button Name="btnDodaj" HorizontalAlignment="Right" Margin="3" MinWidth="80" Grid.Column="3" Grid.Row="7" Command="{Binding Path=DodajIliOsvjeziCommand}">
+        
+        <Label Content="LAN:" Grid.Column="1" Grid.Row="7" Height="30" />
+        <CheckBox Grid.Column="3" Grid.Row="7" Name="checkLAN" Height="30" IsChecked="{Binding Path=Liga.LAN, Mode=TwoWay}" />
+        <Button Name="btnDodaj" HorizontalAlignment="Right" Margin="3" MinWidth="80" Grid.Column="3" Grid.Row="8" Command="{Binding Path=DodajIliOsvjeziCommand}">
             <TextBlock>Dodaj</TextBlock>
         </Button>
     </Grid>

@@ -40,7 +40,21 @@ namespace BP2Projekt.ViewModels
         }
         public SudionikModel Sudionik { get; set; }
         public UlogaModel Uloga { get; set; }
-        public OrganizacijaModel Organizacija { get; set; }
+
+        private OrganizacijaModel _organizacija;
+        public OrganizacijaModel Organizacija 
+        {
+            get => _organizacija;
+            set 
+            {
+                if (value == null)
+                    return;
+
+                SetProperty(ref _organizacija, value);
+
+                OsvjeziTim(value.ID_Organizacija);
+            }
+        }
 
         public IgracTrenerRadioModel RadioModel { get; set; }
         public ObservableCollection<SudionikModel> ListaSudionika { get; set; }
@@ -131,6 +145,39 @@ namespace BP2Projekt.ViewModels
             }
         }
 
+        private void OsvjeziTim(int ID_Organizacija)
+        {
+            if (Igra == null)
+                return;
+
+            using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
+            {
+                var selectSQL = new SQLiteCommand(@"SELECT * FROM Tim WHERE FK_igra=@ID_igra AND FK_organizacija=@ID_org", con);
+                selectSQL.Parameters.AddWithValue("@ID_igra", Igra.ID_Igra);
+                selectSQL.Parameters.AddWithValue("@ID_org", ID_Organizacija);
+
+                con.Open();
+
+                try
+                {
+                    var reader = selectSQL.ExecuteReader();
+
+                    reader.Read();
+                    if (!reader.HasRows)
+                        return;
+
+                    Sudionik.ID_Tim = Convert.ToInt32(reader["ID_tim"]);
+                    Sudionik.TimNaziv = reader["NazivTima"].ToString();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neuspješno čitanje tima baze, greška: {ex.Message}");
+                }
+
+                con.Close();
+            }
+        }
+
         private void PopuniOrganizacije()
         {
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
@@ -173,8 +220,8 @@ namespace BP2Projekt.ViewModels
             using (var con = new SQLiteConnection(SQLPostavke.ConnectionStr))
             {
                 var selectSQL = new SQLiteCommand(@"SELECT S.*, T.NazivTima AS NazivTima, U.*, O.*, I.ID_igra FROM Sudionik S 
-                                                    JOIN Tim T ON S.FK_tim = T.ID_tim
-                                                    JOIN Organizacija O ON O.ID_org = T.FK_organizacija 
+                                                    LEFT JOIN Tim T ON S.FK_tim = T.ID_tim
+                                                    LEFT JOIN Organizacija O ON O.ID_org = T.FK_organizacija 
                                                     JOIN Igra I ON I.ID_igra = T.FK_igra
                                                     LEFT JOIN Igrac IG ON IG.FK_sudionik = @Id
                                                     LEFT JOIN Uloga U ON U.ID_uloga = IG.FK_uloga
@@ -202,12 +249,18 @@ namespace BP2Projekt.ViewModels
                     Sudionik.Starost = Convert.ToInt32(reader["Starost"]);
                     Sudionik.Ime = reader["Ime"].ToString();
                     Sudionik.Prezime = reader["Prezime"].ToString();
+                    
+                    //var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
 
                     Organizacija = ListaOrganizacije.FirstOrDefault(org => org.ID_Organizacija == Convert.ToInt32(reader["ID_org"]));
                     Igra = ListaIgre.FirstOrDefault(igra => igra.ID_Igra == Convert.ToInt32(reader["ID_igra"]));
-
+   
                     if (reader["ID_uloga"] != null)
+                    {
                         Uloga = ListaUloge.FirstOrDefault(uloga => uloga.ID_Uloga == Convert.ToInt32(reader["ID_uloga"]));
+                        Sudionik.ID_Uloga = Convert.ToInt32(reader["ID_uloga"]);
+                        Sudionik.UlogaNaziv = reader["NazivUloge"].ToString();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -273,14 +326,14 @@ namespace BP2Projekt.ViewModels
 
                     transaction.Commit();
                 }*/
-
+                
                 string upit = string.Empty;
                 SQLiteCommand insertSQL;
 
                 if (ID_Sudionik == -1)
                     upit = @"INSERT INTO Sudionik (Ime, Prezime, Starost, Nadimak, FK_tim, Aktivan, Drzava) VALUES (@Ime, @Prezime, @Starost, @Nadimak, @FK_tim, @Aktivan, @Drzava)";
                 else
-                    upit = @"UPDATE Sudionik WHERE FK_sudionik=@Id SET Ime=@Ime, Prezime=@Prezime, Starost=@Starost, Nadimak=@Nadimak, FK_tim=@FK_tim, Aktivan=@Aktivan, Drzava=@Drzava";
+                    upit = @"UPDATE Sudionik SET Ime=@Ime, Prezime=@Prezime, Starost=@Starost, Nadimak=@Nadimak, FK_tim=@FK_tim, Aktivan=@Aktivan, Drzava=@Drzava WHERE Id_sudionik=@Id ";
 
                 insertSQL = new SQLiteCommand(upit, con);
                 insertSQL.Parameters.AddWithValue("@Id", Sudionik.ID_Sudionik);
@@ -300,6 +353,7 @@ namespace BP2Projekt.ViewModels
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Neuspješno dodavanje sudionika u bazu! {Environment.NewLine} Greška: {ex.Message}");
+                    return;
                 }
 
                 if (RadioModel.JeIgrac)
@@ -307,7 +361,7 @@ namespace BP2Projekt.ViewModels
                     if (ID_Sudionik == -1)
                         upit = @"INSERT INTO Igrac (FK_sudionik, FK_uloga, Igrac_od) VALUES (@Id, @FK_uloga, @Igrac_od)";
                     else
-                        upit = @"UPDATE Igrac WHERE FK_sudionik=@Id SET FK_uloga = @FK_uloga, Igrac_od=@Igrac_od";
+                        upit = @"UPDATE Igrac SET FK_uloga = @FK_uloga, Igrac_od=@Igrac_od WHERE FK_sudionik=@Id ";
                 }
                 else if (RadioModel.JeTrener)
                 {
@@ -322,7 +376,7 @@ namespace BP2Projekt.ViewModels
                 insertSQL.Parameters.AddWithValue("@FK_uloga", Uloga.ID_Uloga);
                 insertSQL.Parameters.AddWithValue("@Igrac_od", Sudionik.IgracOd);
                 insertSQL.Parameters.AddWithValue("@Trener_od", Sudionik.TrenerOd);
-
+                
                 try
                 {
                     insertSQL.ExecuteNonQuery();

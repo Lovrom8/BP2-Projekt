@@ -16,6 +16,7 @@ namespace BP2Projekt.Models
         private string organizatorNaziv;
         private string nazivLige;
         private string igra;
+        private bool lan;
 
         public int ID_Liga
         {
@@ -39,6 +40,19 @@ namespace BP2Projekt.Models
                     return;
 
                 nazivLige = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool LAN
+        {
+            get => lan;
+            set
+            {
+                if (lan == value)
+                    return;
+
+                lan = value;
                 NotifyPropertyChanged();
             }
         }

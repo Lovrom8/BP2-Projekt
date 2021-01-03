@@ -10,7 +10,7 @@ namespace BP2Projekt.Models
     class MecModel : INotifyPropertyChanged
     {
         private int id;
-        private string datum;
+        private DateTime datum;
         private int timA;
         private int timB;
         private int pobjednik;
@@ -18,6 +18,7 @@ namespace BP2Projekt.Models
         private int rezultatB;
         private int ligaID;
 
+        private string igra;
         private string liga;
         private string nazivA;
         private string nazivB;
@@ -36,7 +37,7 @@ namespace BP2Projekt.Models
             }
         }
 
-        public string Datum
+        public DateTime Datum
         {
             get => datum;
             set
@@ -179,6 +180,20 @@ namespace BP2Projekt.Models
                 NotifyPropertyChanged();
             }
         }
+
+        public string Igra
+        {
+            get => igra;
+            set
+            {
+                if (igra == value)
+                    return;
+
+                igra = value;
+                NotifyPropertyChanged();
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
